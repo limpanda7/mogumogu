@@ -151,7 +151,7 @@ function CompletedWordsPage({ onBack }) {
                   >
                     <div className="word-card">
                       <div className="word-card-front">
-                        <div className="word-card-kanji">{word.kanji}</div>
+                        <div className="word-card-kanji">{word.kanji || word.hiragana}</div>
                       </div>
                       <div className="word-card-back">
                         <div className="word-card-kanji">{word.kanji || word.hiragana}</div>

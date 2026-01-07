@@ -4,17 +4,20 @@ import { vocabulary, shuffleArray } from './vocabulary'
 import QuizPage from './QuizPage'
 import CompletedWordsPage from './CompletedWordsPage'
 import ResultPage from './ResultPage'
+import SettingsPage from './SettingsPage'
 
 // localStorage 키
 const STORAGE_KEYS = {
   REVIEW_WORDS: 'mogumogu_review_words',
-  COMPLETED_WORDS: 'mogumogu_completed_words'
+  COMPLETED_WORDS: 'mogumogu_completed_words',
+  QUIZ_COUNT: 'mogumogu_quiz_count'
 }
 
 function App() {
   const [showQuiz, setShowQuiz] = useState(false)
   const [showCompletedWords, setShowCompletedWords] = useState(false)
   const [showResult, setShowResult] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
   const [quizWords, setQuizWords] = useState([])
   const [resultQuizWords, setResultQuizWords] = useState([])
   const [completedCount, setCompletedCount] = useState(0)
@@ -51,13 +54,13 @@ function App() {
   const handleQuizComplete = (completedQuizWords) => {
     // 퀴즈 페이지 닫기 (이미 QuizPage에서 로컬 스토리지 저장 완료)
     setShowQuiz(false)
-    
+
     // 결과 페이지로 이동 (배열인 경우에만)
     if (Array.isArray(completedQuizWords) && completedQuizWords.length > 0) {
       setResultQuizWords(completedQuizWords)
       setShowResult(true)
     }
-    
+
     // 완료한 단어 개수 업데이트
     const savedCompletedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS) || '[]')
     setCompletedCount(savedCompletedWords.length)
@@ -81,16 +84,18 @@ function App() {
   const generateQuizWords = () => {
     const savedCompletedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS) || '[]')
     const savedReviewWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS) || '[]')
+    // 저장된 문제 양 가져오기 (기본값 5)
+    const quizCount = parseInt(localStorage.getItem(STORAGE_KEYS.QUIZ_COUNT) || '5', 10)
 
     let wordsList = []
 
-    // 복습 단어가 5개 이상이면 복습 단어만 5개
-    if (savedReviewWords.length >= 5) {
-      wordsList = shuffleArray(savedReviewWords).slice(0, 5)
+    // 복습 단어가 설정된 문제 양 이상이면 복습 단어만 선택
+    if (savedReviewWords.length >= quizCount) {
+      wordsList = shuffleArray(savedReviewWords).slice(0, quizCount)
     } else {
-      // 복습 단어가 5개 미만이면 복습 단어 + 새로운 단어로 총 5개
+      // 복습 단어가 설정된 문제 양 미만이면 복습 단어 + 새로운 단어로 총 문제 양만큼
       const reviewCount = savedReviewWords.length
-      const newWordCount = 5 - reviewCount
+      const newWordCount = quizCount - reviewCount
 
       // 이미 completed나 review에 있는 단어들 제외
       const completedRomaji = savedCompletedWords.map(w => w.romaji)
@@ -116,7 +121,7 @@ function App() {
     if (!localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS)) {
       localStorage.setItem(STORAGE_KEYS.COMPLETED_WORDS, JSON.stringify([]))
     }
-    
+
     // 버튼을 누를 때마다 퀴즈 생성
     const newQuizWords = generateQuizWords()
     setQuizWords(newQuizWords)
@@ -125,6 +130,21 @@ function App() {
 
   const handleShowCompletedWords = () => {
     setShowCompletedWords(true)
+  }
+
+  const handleShowSettings = () => {
+    setShowSettings(true)
+  }
+
+  const handleBackFromSettings = () => {
+    setShowSettings(false)
+    // 완료한 단어 개수 업데이트
+    const savedCompletedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS) || '[]')
+    setCompletedCount(savedCompletedWords.length)
+  }
+
+  const handleCompletedWordsReset = () => {
+    setCompletedCount(0)
   }
 
   if (showQuiz) {
@@ -139,6 +159,13 @@ function App() {
     return <CompletedWordsPage onBack={handleBackFromCompletedWords} />
   }
 
+  if (showSettings) {
+    return <SettingsPage onBack={handleBackFromSettings} onCompletedWordsReset={handleCompletedWordsReset} />
+  }
+
+  // 저장된 문제 양 가져오기 (기본값 5)
+  const quizCount = parseInt(localStorage.getItem(STORAGE_KEYS.QUIZ_COUNT) || '5', 10)
+
   return (
       <div className="app">
       <div className="main-container page-enter">
@@ -148,16 +175,22 @@ function App() {
             모구모구 초급 일본어
             <span className="title-emoji">🍙</span>
           </h1>
-          <p className="main-subtitle">단어를 꼭꼭 씹어보세요!</p>
+          <p className="main-subtitle">
+            단어를 꼭꼭 씹어먹고<br/>
+            발음도 들어보세요 🔊
+          </p>
 
           <div className="button-row">
             <button onClick={handleStartQuiz} className="start-quiz-button">
-              5문제 냠냠
+              {quizCount}문제 냠냠
             </button>
             <button onClick={handleShowCompletedWords} className="completed-words-button">
               소화한 단어({completedCount}개)
             </button>
           </div>
+          <button onClick={handleShowSettings} className="settings-button-bottom">
+            ⚙️ 설정
+          </button>
         </div>
       </div>
     </div>

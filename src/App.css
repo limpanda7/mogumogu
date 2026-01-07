@@ -10,7 +10,7 @@
   justify-content: center;
   align-items: center;
   background: linear-gradient(135deg, #ffd89b 0%, #ff9a56 50%, #ffad56 100%);
-  padding: 20px;
+  padding: 10px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -36,8 +36,8 @@
   width: 100%;
   max-width: 500px;
   background: white;
-  border-radius: 20px;
-  padding: 30px 20px;
+  border-radius: 15px;
+  padding: 25px 15px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   position: relative;
 }
@@ -144,6 +144,8 @@
   font-size: 0.65em;
 }
 
+/* 모바일 전용 프로젝트이므로 미디어 쿼리 없이 기본 스타일 적용 */
+
 .example-japanese .blank {
   display: inline-block;
   color: #ff8c42;
@@ -193,6 +195,47 @@
   margin-top: 15px;
   padding-top: 15px;
   border-top: 1px solid #e0e0e0;
+}
+
+.options-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option-button {
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+  color: #333;
+  text-align: center;
+  min-height: 56px;
+  font-family: 'Courier New', monospace;
+}
+
+.option-button:disabled {
+  cursor: not-allowed;
+}
+
+.option-button.correct {
+  border-color: #28a745;
+  background: #d4edda;
+  color: #155724;
+  font-weight: 700;
+}
+
+.option-button.incorrect {
+  border-color: #dc3545;
+  background: #f8d7da;
+  color: #721c24;
+  font-weight: 700;
 }
 
 .input-wrapper {
@@ -275,21 +318,30 @@
 
 .button-group {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
+  min-height: 48px;
+  align-items: center;
+}
+
+.button-spacer {
+  width: 100%;
+  height: 48px;
+  visibility: hidden;
 }
 
 button {
   flex: 1;
-  min-width: 120px;
+  min-width: unset;
   padding: 15px 20px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
   color: white;
+  min-height: 48px;
 }
 
 .hint-button {
@@ -358,16 +410,16 @@ button {
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 25px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   z-index: 1000;
   animation: slideDownFade 0.3s ease-out, slideUpFade 0.3s ease-out 2.7s forwards;
   pointer-events: none;
   white-space: nowrap;
-  min-width: 200px;
-  max-width: 90vw;
+  min-width: 180px;
+  max-width: 85vw;
   text-align: center;
 }
 
@@ -393,51 +445,6 @@ button {
   }
 }
 
-/* 모바일 최적화 */
-@media (max-width: 480px) {
-  .app {
-    padding: 10px;
-  }
-
-  .quiz-container {
-    padding: 25px 15px;
-    border-radius: 15px;
-  }
-
-  .kanji {
-    font-size: 40px;
-  }
-
-  .hiragana {
-    font-size: 20px;
-  }
-
-  .example-japanese {
-    font-size: 24px;
-  }
-
-  .example-japanese rt {
-    font-size: 0.65em;
-  }
-
-  .button-group {
-    gap: 8px;
-  }
-
-  button {
-    min-width: unset;
-    font-size: 14px;
-    padding: 15px 20px;
-    min-height: 48px;
-  }
-}
-
-/* 데스크톱에서는 모바일 크기로 제한 */
-@media (min-width: 481px) {
-  .quiz-container {
-    max-width: 500px;
-  }
-}
 
 /* 메인 페이지 스타일 */
 .main-container {
@@ -452,13 +459,14 @@ button {
   width: 100%;
   background: white;
   border-radius: 20px;
-  padding: 40px 30px;
+  padding: 30px 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   text-align: center;
+  position: relative;
 }
 
 .main-title {
-  font-size: 36px;
+  font-size: 24px;
   color: #ff8c42;
   margin-bottom: 15px;
   font-weight: 800;
@@ -505,7 +513,7 @@ button {
 }
 
 .day-number {
-  font-size: 64px;
+  font-size: 56px;
   font-weight: 700;
   color: #ff8c42;
   line-height: 1;
@@ -513,13 +521,13 @@ button {
 }
 
 .day-label {
-  font-size: 20px;
+  font-size: 18px;
   color: #666;
   font-weight: 500;
 }
 
 .word-count {
-  font-size: 18px;
+  font-size: 16px;
   color: #555;
   margin-bottom: 30px;
   padding: 15px;
@@ -529,14 +537,14 @@ button {
 
 .button-row {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   width: 100%;
 }
 
 .start-quiz-button {
   flex: 1;
-  padding: 18px 30px;
-  font-size: 18px;
+  padding: 30px 16px;
+  font-size: 16px;
   font-weight: 600;
   border: none;
   border-radius: 12px;
@@ -553,27 +561,10 @@ button {
   background: linear-gradient(135deg, #ffc837 0%, #ff8c42 100%);
 }
 
-.increase-day-button {
-  width: 100%;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 2px solid #667eea;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: white;
-  color: #667eea;
-}
-
-.increase-day-button:hover {
-  background: #f0f0ff;
-}
-
 .completed-words-button {
   flex: 1;
-  padding: 18px 30px;
-  font-size: 18px;
+  padding: 16px;
+  font-size: 16px;
   font-weight: 600;
   border: 2px solid #ff9a56;
   border-radius: 12px;
@@ -621,8 +612,8 @@ button {
 
 .words-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
   max-height: 60vh;
   overflow-y: auto;
   padding: 10px;
@@ -636,7 +627,7 @@ button {
 .word-card {
   position: relative;
   width: 100%;
-  height: 120px;
+  height: 100px;
   transition: transform 0.6s;
   transform-style: preserve-3d;
 }
@@ -657,7 +648,7 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
 }
@@ -685,136 +676,41 @@ button {
 }
 
 .word-card-kanji {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
   color: #333;
 }
 
 .word-card-hiragana {
-  font-size: 20px;
+  font-size: 18px;
   color: #666;
   margin-bottom: 8px;
 }
 
 .word-card-romaji {
-  font-size: 16px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 8px;
   font-style: italic;
 }
 
 .word-card-korean {
-  font-size: 18px;
+  font-size: 16px;
   color: #ff8c42;
   font-weight: 600;
 }
 
-/* 모바일 최적화 */
-@media (max-width: 480px) {
-  .main-content {
-    padding: 30px 20px;
-  }
-
-  .main-title {
-    font-size: 24px;
-  }
-
-  .day-number {
-    font-size: 56px;
-  }
-
-  .day-label {
-    font-size: 18px;
-  }
-
-  .word-count {
-    font-size: 16px;
-  }
-
-  .button-row {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .start-quiz-button,
-  .completed-words-button {
-    width: 100%;
-  }
-
-  .words-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-  }
-
-  .word-card {
-    height: 100px;
-  }
-
-  .word-card-front,
-  .word-card-back {
-    padding: 15px;
-  }
-
-  .word-card-kanji {
-    font-size: 28px;
-  }
-
-  .word-card-hiragana {
-    font-size: 18px;
-  }
-
-  .word-card-romaji {
-    font-size: 14px;
-  }
-
-  .word-card-korean {
-    font-size: 16px;
-  }
-
-  .review-notification {
-    padding: 10px 20px;
-    font-size: 13px;
-    min-width: 180px;
-    max-width: 85vw;
-  }
-
-  .result-section {
-    padding: 15px;
-  }
-
-  .result-section-title {
-    font-size: 18px;
-  }
-
-  .result-word-item {
-    padding: 12px;
-    gap: 12px;
-  }
-
-  .result-word-kanji {
-    font-size: 28px;
-    min-width: 50px;
-  }
-
-  .result-word-romaji {
-    font-size: 14px;
-  }
-
-  .result-word-korean {
-    font-size: 14px;
-  }
-}
 
 /* 결과 페이지 스타일 */
 .result-section {
   margin-bottom: 30px;
-  padding: 20px;
+  padding: 15px;
   background: #f8f9fa;
   border-radius: 12px;
 }
 
 .result-section-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #ff8c42;
   margin-bottom: 15px;
@@ -830,8 +726,8 @@ button {
 .result-word-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
+  gap: 12px;
+  padding: 12px;
   background: white;
   border-radius: 10px;
   border: 2px solid #e0e0e0;
@@ -849,10 +745,10 @@ button {
 }
 
 .result-word-kanji {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
   color: #333;
-  min-width: 60px;
+  min-width: 50px;
   text-align: center;
 }
 
@@ -864,13 +760,135 @@ button {
 }
 
 .result-word-romaji {
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Courier New', monospace;
   font-weight: bold;
   color: #555;
 }
 
 .result-word-korean {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
 }
+
+/* 설정 페이지 스타일 */
+.settings-section {
+  margin-top: 30px;
+}
+
+.settings-item-simple {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+
+.settings-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.quiz-count-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.quiz-count-button-minus,
+.quiz-count-button-plus {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ff8c42;
+  border-radius: 50%;
+  background: white;
+  color: #ff8c42;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.quiz-count-button-minus:hover:not(:disabled),
+.quiz-count-button-plus:hover {
+  background: linear-gradient(135deg, #ffd89b 0%, #ff9a56 100%);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 156, 86, 0.4);
+}
+
+.quiz-count-button-minus:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #ccc;
+}
+
+.quiz-count-display {
+  min-width: 70px;
+  padding: 8px 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff8c42;
+  text-align: center;
+  background: #fff8f0;
+  border-radius: 12px;
+  border: 2px solid #ffd89b;
+  flex-shrink: 0;
+}
+
+.reset-button {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid #dc3545;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+  color: #dc3545;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+}
+
+.reset-button:hover {
+  background: #dc3545;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.settings-button-bottom {
+  width: auto;
+  margin: 12px auto 0;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid #6c757d;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+  color: #6c757d;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.settings-button-bottom:hover {
+  background: #6c757d;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
