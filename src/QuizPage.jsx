@@ -144,8 +144,9 @@ function QuizPage({ quizWords, onComplete }) {
       return
     }
 
-    const normalizedAnswer = userAnswer.trim().toLowerCase()
-    const normalizedCorrect = currentQuiz.romaji.toLowerCase()
+    // 띄어쓰기를 제거하고 비교 (사용자가 띄어쓰기를 넣지 않아도 정답 처리)
+    const normalizedAnswer = userAnswer.trim().replace(/\s+/g, '').toLowerCase()
+    const normalizedCorrect = currentQuiz.romaji.trim().replace(/\s+/g, '').toLowerCase()
 
     if (normalizedAnswer === normalizedCorrect) {
       setIsCorrect(true)
@@ -227,6 +228,15 @@ function QuizPage({ quizWords, onComplete }) {
         clearTimeout(blurTimeoutRefs.current.input2)
         blurTimeoutRefs.current.input2 = null
       }
+      
+      // 다음 문제로 넘어갈 때 입력 필드에 포커스
+      const focusTimeout = setTimeout(() => {
+        inputRef.current?.focus()
+      }, 150)
+      
+      return () => {
+        clearTimeout(focusTimeout)
+      }
     }
   }, [currentIndex])
 
@@ -269,18 +279,8 @@ function QuizPage({ quizWords, onComplete }) {
   const handleNext = () => {
     if (currentIndex < quizData.length - 1) {
       setCurrentIndex(currentIndex + 1)
-      setUserAnswer('')
-      setIsCorrect(null)
-      setShowHint(false)
-      setHasAnswered(false)
-      // 다음 문제로 넘어간 후 입력 필드에 포커스
-      if (timeoutRefs.current.next) {
-        clearTimeout(timeoutRefs.current.next)
-      }
-      timeoutRefs.current.next = setTimeout(() => {
-        inputRef.current?.focus()
-        timeoutRefs.current.next = null
-      }, 0)
+      // 상태 초기화는 useEffect에서 처리됨
+      // 포커스도 useEffect에서 처리됨
     } else {
       // 모든 문제 완료 (이미 각 문제마다 저장됨)
       // 퀴즈 단어들을 결과 페이지로 전달
@@ -441,9 +441,13 @@ function QuizPage({ quizWords, onComplete }) {
     const result = []
     let exampleIndex = 0
     let hiraganaIndex = 0
+    let prevExampleIndex = exampleIndex
+    let iterationCount = 0
+    const maxIterations = example.length * 2 // 안전장치: 최대 반복 횟수
 
     // 예문과 히라가나 예문을 동시에 순회하면서 매칭
-    while (exampleIndex < example.length) {
+    while (exampleIndex < example.length && iterationCount < maxIterations) {
+      iterationCount++
       const exampleChar = example[exampleIndex]
       const isKanji = /[\u4e00-\u9faf]/.test(exampleChar)
 
@@ -467,6 +471,7 @@ function QuizPage({ quizWords, onComplete }) {
         const nextNonKanjiChar = nextNonKanjiIndex < example.length ? example[nextNonKanjiIndex] : null
 
         // 히라가나/가타카나 문자들을 찾기
+        let prevHiraganaEnd = hiraganaEnd
         while (hiraganaEnd < exampleHiragana.length) {
           const hiraganaChar = exampleHiragana[hiraganaEnd]
 
@@ -474,6 +479,10 @@ function QuizPage({ quizWords, onComplete }) {
           if (!/[\u3040-\u309f\u30a0-\u30ff]/.test(hiraganaChar)) {
             // 다음 한자가 아닌 문자와 매칭되면 중단
             if (nextNonKanjiChar && hiraganaChar === nextNonKanjiChar) {
+              break
+            }
+            // nextNonKanjiChar가 없거나 매칭되지 않으면 중단 (무한 루프 방지)
+            if (!nextNonKanjiChar) {
               break
             }
             hiraganaEnd++
@@ -487,6 +496,12 @@ function QuizPage({ quizWords, onComplete }) {
               }
             }
           }
+          
+          // 무한 루프 방지: hiraganaEnd가 증가하지 않으면 중단
+          if (hiraganaEnd === prevHiraganaEnd) {
+            break
+          }
+          prevHiraganaEnd = hiraganaEnd
         }
 
         const hiraganaGroup = exampleHiragana.substring(hiraganaStart, hiraganaEnd)
@@ -504,7 +519,8 @@ function QuizPage({ quizWords, onComplete }) {
           result.push(kanjiGroup)
         }
 
-        exampleIndex = kanjiEnd
+        // kanjiEnd가 exampleIndex보다 작거나 같으면 무한 루프 방지를 위해 강제로 증가
+        exampleIndex = Math.max(kanjiEnd, exampleIndex + 1)
       } else {
         // 한자가 아닌 문자(가타카나, 히라가나 등)는 그대로 추가
         // 루비 없이 표시
@@ -534,6 +550,12 @@ function QuizPage({ quizWords, onComplete }) {
 
         exampleIndex++
       }
+      
+      // 무한 루프 방지: exampleIndex가 증가하지 않으면 강제로 증가
+      if (exampleIndex === prevExampleIndex) {
+        exampleIndex++
+      }
+      prevExampleIndex = exampleIndex
     }
 
     return <>{result}</>
@@ -543,16 +565,38 @@ function QuizPage({ quizWords, onComplete }) {
   const getExampleWithBlank = (example, kanji, exampleHiragana, hiragana) => {
     const result = []
     let hiraganaIndex = 0
-    const kanjiIndex = example.indexOf(kanji)
+    // kanji가 빈 문자열이거나 없으면 hiragana를 사용
+    const hasKanji = kanji && kanji.length > 0
+    const kanjiIndex = hasKanji ? example.indexOf(kanji) : -1
+    // kanji가 없으면 exampleHiragana에서 hiragana를 찾음
+    const hiraganaIndexInExample = !hasKanji && hiragana && hiragana.length > 0 
+      ? exampleHiragana.indexOf(hiragana) 
+      : -1
 
     for (let i = 0; i < example.length; i++) {
-      // 해당 단어 위치면 빈칸으로 교체
-      if (i === kanjiIndex) {
+      // kanji가 있으면 kanji 위치에서 빈칸으로 교체
+      if (hasKanji && i === kanjiIndex && kanjiIndex !== -1) {
         result.push(<span key={i} className="blank">____</span>)
         // 히라가나 인덱스도 해당 부분만큼 건너뛰기
-        hiraganaIndex += hiragana.length
-        i += kanji.length - 1
+        hiraganaIndex += hiragana && hiragana.length > 0 ? hiragana.length : 0
+        // kanji.length가 0이면 무한 루프 방지를 위해 최소 1 증가
+        i += Math.max(kanji.length - 1, 0)
         continue
+      }
+      
+      // kanji가 없으면 exampleHiragana에서 hiragana 위치를 찾아서 빈칸으로 교체
+      // 이 체크는 한자 처리 전에 해야 함
+      if (!hasKanji && hiragana && hiragana.length > 0 && hiraganaIndex < exampleHiragana.length) {
+        const remainingHiragana = exampleHiragana.substring(hiraganaIndex)
+        if (remainingHiragana.startsWith(hiragana)) {
+          // hiragana를 찾았으면 빈칸으로 교체
+          result.push(<span key={i} className="blank">____</span>)
+          // hiragana 길이만큼 건너뛰기
+          hiraganaIndex += hiragana.length
+          // example에서도 해당 부분 건너뛰기 (최소 1글자)
+          i += Math.max(hiragana.length - 1, 0)
+          continue
+        }
       }
 
       const char = example[i]
@@ -571,6 +615,7 @@ function QuizPage({ quizWords, onComplete }) {
         // 히라가나 예문에서 해당 위치 찾기
         let hiraganaStart = hiraganaIndex
         let hiraganaEnd = hiraganaStart
+        let prevHiraganaEnd = hiraganaEnd
 
         while (hiraganaEnd < exampleHiragana.length) {
           const hiraganaChar = exampleHiragana[hiraganaEnd]
@@ -586,6 +631,12 @@ function QuizPage({ quizWords, onComplete }) {
               }
             }
           }
+          
+          // 무한 루프 방지: hiraganaEnd가 증가하지 않으면 중단
+          if (hiraganaEnd === prevHiraganaEnd) {
+            break
+          }
+          prevHiraganaEnd = hiraganaEnd
         }
 
         const hiraganaGroup = exampleHiragana.substring(hiraganaStart, hiraganaEnd)
@@ -606,8 +657,23 @@ function QuizPage({ quizWords, onComplete }) {
       } else {
         // 한자가 아니면 그대로 추가
         result.push(char)
-        if (hiraganaIndex < exampleHiragana.length && exampleHiragana[hiraganaIndex] === char) {
-          hiraganaIndex++
+        
+        // exampleHiragana와 동기화
+        if (hiraganaIndex < exampleHiragana.length) {
+          // 같은 문자면 둘 다 증가
+          if (exampleHiragana[hiraganaIndex] === char) {
+            hiraganaIndex++
+          } else {
+            // 가타카나와 히라가나가 다른 경우 (예: プ vs ぷ)
+            const isKatakana = /[\u30a0-\u30ff]/.test(char)
+            const isHiragana = /[\u3040-\u309f]/.test(char)
+            const isHiraganaInExample = /[\u3040-\u309f]/.test(exampleHiragana[hiraganaIndex])
+            
+            // 가타카나를 히라가나로 변환한 경우
+            if ((isKatakana || isHiragana) && isHiraganaInExample) {
+              hiraganaIndex++
+            }
+          }
         }
       }
     }

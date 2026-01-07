@@ -116,7 +116,7 @@ export const vocabulary = [
     romaji: 'asatte',
     korean: '모레',
     english: 'day after tomorrow',
-    example: 'あさって会いましょう',
+    example: '明後日会いましょう',
     exampleHiragana: 'あさってあいましょう',
     exampleRomaji: 'asatte ai mashou',
     exampleKorean: '모레 만나요'

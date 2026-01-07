@@ -19,6 +19,17 @@ function App() {
   const [resultQuizWords, setResultQuizWords] = useState([])
   const [completedCount, setCompletedCount] = useState(0)
 
+  // 첫 접속 시 로컬스토리지 초기화
+  useEffect(() => {
+    // review와 completed 배열이 없으면 빈 배열로 생성
+    if (!localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS)) {
+      localStorage.setItem(STORAGE_KEYS.REVIEW_WORDS, JSON.stringify([]))
+    }
+    if (!localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS)) {
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_WORDS, JSON.stringify([]))
+    }
+  }, [])
+
   // 완료한 단어 개수 가져오기
   useEffect(() => {
     const updateCompletedCount = () => {
@@ -98,6 +109,14 @@ function App() {
   }
 
   const handleStartQuiz = () => {
+    // 로컬스토리지가 비어있다면 review와 completed 빈 배열로 초기화
+    if (!localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS)) {
+      localStorage.setItem(STORAGE_KEYS.REVIEW_WORDS, JSON.stringify([]))
+    }
+    if (!localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS)) {
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_WORDS, JSON.stringify([]))
+    }
+    
     // 버튼을 누를 때마다 퀴즈 생성
     const newQuizWords = generateQuizWords()
     setQuizWords(newQuizWords)
