@@ -3,17 +3,25 @@ import './App.css'
 
 const STORAGE_KEYS = {
   COMPLETED_WORDS: 'mogumogu_completed_words',
-  QUIZ_COUNT: 'mogumogu_quiz_count'
+  QUIZ_COUNT: 'mogumogu_quiz_count',
+  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
 }
 
 function SettingsPage({ onBack, onCompletedWordsReset }) {
   const [quizCount, setQuizCount] = useState(5)
+  const [optionDisplayMode, setOptionDisplayMode] = useState('hiragana') // 'hiragana' or 'romaji'
 
   useEffect(() => {
     // 저장된 문제 양 불러오기
     const savedQuizCount = localStorage.getItem(STORAGE_KEYS.QUIZ_COUNT)
     if (savedQuizCount) {
       setQuizCount(parseInt(savedQuizCount, 10))
+    }
+    
+    // 저장된 보기 표시 방식 불러오기 (기본값: hiragana)
+    const savedDisplayMode = localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE)
+    if (savedDisplayMode) {
+      setOptionDisplayMode(savedDisplayMode)
     }
   }, [])
 
@@ -40,6 +48,11 @@ function SettingsPage({ onBack, onCompletedWordsReset }) {
       }
       alert('소화한 단어가 초기화되었습니다.')
     }
+  }
+
+  const handleOptionDisplayModeChange = (mode) => {
+    setOptionDisplayMode(mode)
+    localStorage.setItem(STORAGE_KEYS.OPTION_DISPLAY_MODE, mode)
   }
 
   return (
@@ -74,6 +87,24 @@ function SettingsPage({ onBack, onCompletedWordsReset }) {
                   className="quiz-count-button-plus"
                 >
                   +
+                </button>
+              </div>
+            </div>
+
+            <div className="settings-item-simple">
+              <span className="settings-label">보기 표시 방식</span>
+              <div className="option-display-mode-control">
+                <button
+                  onClick={() => handleOptionDisplayModeChange('hiragana')}
+                  className={`option-mode-button ${optionDisplayMode === 'hiragana' ? 'active' : ''}`}
+                >
+                  히라가나
+                </button>
+                <button
+                  onClick={() => handleOptionDisplayModeChange('romaji')}
+                  className={`option-mode-button ${optionDisplayMode === 'romaji' ? 'active' : ''}`}
+                >
+                  로마자
                 </button>
               </div>
             </div>

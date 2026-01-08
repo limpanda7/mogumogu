@@ -787,7 +787,7 @@ export const vocabulary = [
     korean: '있다',
     english: 'to be, to have (animate objects)',
     partOfSpeech: 'verb',
-    example: '猫がいる',
+    example: '猫が居る',
     exampleHiragana: 'ねこがいる',
     exampleRomaji: 'neko ga iru',
     exampleKorean: '고양이가 있다'
@@ -1219,7 +1219,7 @@ export const vocabulary = [
     korean: '할아버지',
     english: 'grandfather, male senior',
     partOfSpeech: 'noun',
-    example: 'おじいさんが来ました',
+    example: 'お祖父さんが来ました',
     exampleHiragana: 'おじいさんがきました',
     exampleRomaji: 'ojiisan ga kimashita',
     exampleKorean: '할아버지가 오셨습니다'

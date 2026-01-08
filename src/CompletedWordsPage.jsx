@@ -2,15 +2,21 @@ import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
 const STORAGE_KEYS = {
-  COMPLETED_WORDS: 'mogumogu_completed_words'
+  COMPLETED_WORDS: 'mogumogu_completed_words',
+  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
 }
 
 function CompletedWordsPage({ onBack }) {
   const [completedWords, setCompletedWords] = useState([])
   const [selectedWord, setSelectedWord] = useState(null)
+  const [optionDisplayMode, setOptionDisplayMode] = useState('hiragana')
   const speechSynthesisHandlerRef = useRef(null)
 
   useEffect(() => {
+    // 보기 표시 방식 불러오기 (기본값: hiragana)
+    const savedDisplayMode = localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE) || 'hiragana'
+    setOptionDisplayMode(savedDisplayMode)
+
     const savedCompletedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS) || '[]')
     setCompletedWords(savedCompletedWords)
   }, [])
@@ -155,7 +161,7 @@ function CompletedWordsPage({ onBack }) {
                       </div>
                       <div className="word-card-back">
                         <div className="word-card-kanji">{word.kanji || word.hiragana}</div>
-                        <div className="word-card-romaji">{word.romaji}</div>
+                        <div className="word-card-romaji">{optionDisplayMode === 'romaji' ? word.romaji : word.hiragana}</div>
                         <div className="word-card-korean">{word.korean}</div>
                       </div>
                     </div>

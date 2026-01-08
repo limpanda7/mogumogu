@@ -5,7 +5,8 @@ import { vocabulary, shuffleArray } from './vocabulary'
 // localStorage 키
 const STORAGE_KEYS = {
   REVIEW_WORDS: 'mogumogu_review_words',
-  COMPLETED_WORDS: 'mogumogu_completed_words'
+  COMPLETED_WORDS: 'mogumogu_completed_words',
+  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
 }
 
 function QuizPage({ quizWords, onComplete }) {
@@ -21,6 +22,11 @@ function QuizPage({ quizWords, onComplete }) {
 
   const currentQuiz = quizData[currentIndex]
   const isLastQuiz = currentIndex === quizData.length - 1
+
+  // 보기 표시 방식 가져오기 (기본값: hiragana)
+  const optionDisplayMode = useMemo(() => {
+    return localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE) || 'hiragana'
+  }, [currentIndex])
 
   // 현재 단어가 복습 단어인지 확인
   const isReviewWord = useMemo(() => {
@@ -40,12 +46,19 @@ function QuizPage({ quizWords, onComplete }) {
     
     // 정답 포함하여 4개 선택
     const selectedOptions = []
+    const selectedRomaji = new Set()
     selectedOptions.push(currentQuiz) // 정답 추가
+    selectedRomaji.add(currentQuiz.romaji) // 정답 romaji 추가
     
-    // 나머지 3개를 같은 품사에서 랜덤하게 선택
+    // 나머지 3개를 같은 품사에서 랜덤하게 선택 (중복 방지)
     const shuffled = shuffleArray(samePartOfSpeechWords)
-    for (let i = 0; i < Math.min(3, shuffled.length); i++) {
-      selectedOptions.push(shuffled[i])
+    for (let i = 0; i < shuffled.length && selectedOptions.length < 4; i++) {
+      const word = shuffled[i]
+      // 이미 선택된 romaji가 아닌 경우만 추가
+      if (!selectedRomaji.has(word.romaji)) {
+        selectedOptions.push(word)
+        selectedRomaji.add(word.romaji)
+      }
     }
     
     // 보기 섞기
@@ -566,17 +579,19 @@ function QuizPage({ quizWords, onComplete }) {
               : getExampleWithBlank(currentQuiz.example, currentQuiz.kanji, currentQuiz.exampleHiragana, currentQuiz.hiragana)
             }
           </div>
-          <div className="example-reading">
-            <div className="reading-item">
-              <span className="reading-label">읽는 법:</span>
-              <span className="reading-text">
-                {hasAnswered 
-                  ? highlightRomaji(currentQuiz.exampleRomaji, currentQuiz.romaji)
-                  : currentQuiz.exampleRomaji.replace(currentQuiz.romaji, '____')
-                }
-              </span>
+          {optionDisplayMode === 'romaji' && (
+            <div className="example-reading">
+              <div className="reading-item">
+                <span className="reading-label">읽는 법:</span>
+                <span className="reading-text">
+                  {hasAnswered 
+                    ? highlightRomaji(currentQuiz.exampleRomaji, currentQuiz.romaji)
+                    : currentQuiz.exampleRomaji.replace(currentQuiz.romaji, '____')
+                  }
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <div className="example-korean">{currentQuiz.exampleKorean}</div>
         </div>
 
@@ -601,7 +616,7 @@ function QuizPage({ quizWords, onComplete }) {
                 disabled={hasAnswered}
                 className={buttonClass}
               >
-                {option.romaji}
+                {optionDisplayMode === 'romaji' ? option.romaji : option.hiragana}
               </button>
             )
           })}

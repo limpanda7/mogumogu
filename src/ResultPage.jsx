@@ -3,14 +3,20 @@ import './App.css'
 
 const STORAGE_KEYS = {
   REVIEW_WORDS: 'mogumogu_review_words',
-  COMPLETED_WORDS: 'mogumogu_completed_words'
+  COMPLETED_WORDS: 'mogumogu_completed_words',
+  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
 }
 
 function ResultPage({ quizWords, onBack }) {
   const [completedWords, setCompletedWords] = useState([])
   const [reviewWords, setReviewWords] = useState([])
+  const [optionDisplayMode, setOptionDisplayMode] = useState('hiragana')
 
   useEffect(() => {
+    // 보기 표시 방식 불러오기 (기본값: hiragana)
+    const savedDisplayMode = localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE) || 'hiragana'
+    setOptionDisplayMode(savedDisplayMode)
+
     // quizWords가 배열이 아니거나 비어있으면 처리하지 않음
     if (!Array.isArray(quizWords) || quizWords.length === 0) {
       return
@@ -59,7 +65,7 @@ function ResultPage({ quizWords, onBack }) {
                   <div key={index} className="result-word-item completed">
                     <div className="result-word-kanji">{word.kanji || word.hiragana}</div>
                     <div className="result-word-info">
-                      <div className="result-word-romaji">{word.romaji}</div>
+                      <div className="result-word-romaji">{optionDisplayMode === 'romaji' ? word.romaji : word.hiragana}</div>
                       <div className="result-word-korean">{word.korean}</div>
                     </div>
                   </div>
@@ -76,7 +82,7 @@ function ResultPage({ quizWords, onBack }) {
                   <div key={index} className="result-word-item review">
                     <div className="result-word-kanji">{word.kanji || word.hiragana}</div>
                     <div className="result-word-info">
-                      <div className="result-word-romaji">{word.romaji}</div>
+                      <div className="result-word-romaji">{optionDisplayMode === 'romaji' ? word.romaji : word.hiragana}</div>
                       <div className="result-word-korean">{word.korean}</div>
                     </div>
                   </div>
