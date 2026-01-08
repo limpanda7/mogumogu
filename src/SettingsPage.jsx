@@ -49,13 +49,15 @@ function SettingsPage({ onBack, onCompletedWordsReset }) {
           <button onClick={onBack} className="back-chevron-button">
             <span className="chevron-icon"></span>
           </button>
-          <h1 className="main-title">
-            설정
-          </h1>
+          <div className="settings-header">
+            <h1 className="settings-title">
+              설정
+            </h1>
+          </div>
 
           <div className="settings-section">
             <div className="settings-item-simple">
-              <span className="settings-label">문제 양</span>
+              <span className="settings-label">한번에 풀 문제 양</span>
               <div className="quiz-count-control">
                 <button
                   onClick={handleDecrease}

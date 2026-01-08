@@ -45,9 +45,6 @@ function ResultPage({ quizWords, onBack }) {
     <div className="app">
       <div className="main-container page-enter">
         <div className="main-content" style={{ position: 'relative' }}>
-          <button onClick={onBack} className="back-chevron-button">
-            <span className="chevron-icon"></span>
-          </button>
           <h1 className="main-title">
             <span className="title-emoji">🍙</span>
             퀴즈 결과

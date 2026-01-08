@@ -22,6 +22,13 @@ function QuizPage({ quizWords, onComplete }) {
   const currentQuiz = quizData[currentIndex]
   const isLastQuiz = currentIndex === quizData.length - 1
 
+  // 현재 단어가 복습 단어인지 확인
+  const isReviewWord = useMemo(() => {
+    if (!currentQuiz) return false
+    const savedReviewWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS) || '[]')
+    return savedReviewWords.some(w => w.romaji === currentQuiz.romaji)
+  }, [currentQuiz])
+
   // 같은 품사 내에서 보기 생성
   const options = useMemo(() => {
     if (!currentQuiz || !currentQuiz.partOfSpeech) return []
@@ -460,14 +467,29 @@ function QuizPage({ quizWords, onComplete }) {
   return (
     <div className="app">
       <div className="quiz-container page-enter">
-        <button onClick={() => onComplete()} className="back-chevron-button">
-          <span className="chevron-icon"></span>
-        </button>
-        <div className="progress">
-          {currentIndex + 1} / {quizData.length}
+        <div className="top-header">
+          <button onClick={() => onComplete()} className="back-chevron-button">
+            <span className="chevron-icon"></span>
+          </button>
+          <div className="progress-container">
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${((currentIndex + 1) / quizData.length) * 100}%` }}
+              >
+                <span className="progress-icon">🍙</span>
+              </div>
+            </div>
+            <div className="progress-text">
+              {currentIndex + 1} / {quizData.length}
+            </div>
+          </div>
         </div>
 
         <div className="example-section">
+          {isReviewWord && (
+            <div className="review-badge">복습</div>
+          )}
           <div className="example-japanese">
             {hasAnswered
               ? addRubyToExample(currentQuiz.example, currentQuiz.exampleHiragana)
