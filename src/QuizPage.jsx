@@ -184,6 +184,27 @@ function QuizPage({ quizWords, onComplete }) {
     }
   }
 
+  const handleDontKnow = () => {
+    if (hasAnswered) return
+
+    // 복습 대상에 추가
+    saveToReviewWords(currentQuiz)
+    
+    // 정답 공개
+    setSelectedAnswer(currentQuiz.romaji)
+    setHasAnswered(true)
+    
+    // 복습 대상 추가 알림 표시
+    setShowReviewNotification(true)
+    timeoutRefs.current.notification = setTimeout(() => {
+      setShowReviewNotification(false)
+      timeoutRefs.current.notification = null
+    }, 3000)
+    
+    // TTS로 예문 읽기
+    speakText(currentQuiz.exampleHiragana || currentQuiz.example)
+  }
+
   const speakText = (text) => {
     if ('speechSynthesis' in window && text) {
       // 기존 재생 중지 및 이전 핸들러 제거
@@ -264,14 +285,25 @@ function QuizPage({ quizWords, onComplete }) {
     }
   }
 
-  // 예문에 한자 위에 히라가나 루비 추가
-  const addRubyToExample = (example, exampleHiragana) => {
+  // 예문에 한자 위에 히라가나 루비 추가 (정답 표시 시 해당 단어 색칠)
+  const addRubyToExample = (example, exampleHiragana, kanji, hiragana) => {
     const result = []
     let exampleIndex = 0
     let hiraganaIndex = 0
     let prevExampleIndex = exampleIndex
     let iterationCount = 0
     const maxIterations = example.length * 2
+    
+    // 해당 단어의 위치 찾기
+    const hasKanji = kanji && kanji.length > 0
+    const kanjiIndex = hasKanji ? example.indexOf(kanji) : -1
+    const hiraganaIndexInExample = !hasKanji && hiragana && hiragana.length > 0 
+      ? example.indexOf(hiragana) 
+      : -1
+    const targetStartIndex = hasKanji ? kanjiIndex : hiraganaIndexInExample
+    const targetEndIndex = hasKanji 
+      ? (kanjiIndex !== -1 ? kanjiIndex + kanji.length : -1)
+      : (hiraganaIndexInExample !== -1 ? hiraganaIndexInExample + hiragana.length : -1)
 
     while (exampleIndex < example.length && iterationCount < maxIterations) {
       iterationCount++
@@ -318,22 +350,40 @@ function QuizPage({ quizWords, onComplete }) {
         }
 
         const hiraganaGroup = exampleHiragana.substring(hiraganaStart, hiraganaEnd)
+        
+        // 해당 단어 부분인지 확인하여 색칠
+        const isTargetWord = targetStartIndex !== -1 && 
+          kanjiStart >= targetStartIndex && kanjiStart < targetEndIndex
 
         if (hiraganaGroup) {
           result.push(
-            <ruby key={exampleIndex}>
+            <ruby key={exampleIndex} className={isTargetWord ? 'highlighted-word' : ''}>
               {kanjiGroup}
-              <rt>{hiraganaGroup}</rt>
+              <rt className={isTargetWord ? 'highlighted-reading' : ''}>{hiraganaGroup}</rt>
             </ruby>
           )
           hiraganaIndex = hiraganaEnd
         } else {
-          result.push(kanjiGroup)
+          const isTargetWord = targetStartIndex !== -1 && 
+            kanjiStart >= targetStartIndex && kanjiStart < targetEndIndex
+          result.push(
+            <span key={exampleIndex} className={isTargetWord ? 'highlighted-word' : ''}>
+              {kanjiGroup}
+            </span>
+          )
         }
 
         exampleIndex = Math.max(kanjiEnd, exampleIndex + 1)
       } else {
-        result.push(exampleChar)
+        // 해당 단어 부분인지 확인하여 색칠
+        const isTargetWord = targetStartIndex !== -1 && 
+          exampleIndex >= targetStartIndex && exampleIndex < targetEndIndex
+        
+        result.push(
+          <span key={exampleIndex} className={isTargetWord ? 'highlighted-word' : ''}>
+            {exampleChar}
+          </span>
+        )
 
         if (hiraganaIndex < exampleHiragana.length) {
           if (exampleHiragana[hiraganaIndex] === exampleChar) {
@@ -360,6 +410,26 @@ function QuizPage({ quizWords, onComplete }) {
     }
 
     return <>{result}</>
+  }
+  
+  // 발음(romaji)에서 해당 단어 부분 색칠
+  const highlightRomaji = (exampleRomaji, romaji) => {
+    if (!romaji || !exampleRomaji) return exampleRomaji
+    
+    const index = exampleRomaji.indexOf(romaji)
+    if (index === -1) return exampleRomaji
+    
+    const before = exampleRomaji.substring(0, index)
+    const highlighted = romaji
+    const after = exampleRomaji.substring(index + romaji.length)
+    
+    return (
+      <>
+        {before}
+        <span className="highlighted-romaji">{highlighted}</span>
+        {after}
+      </>
+    )
   }
 
   // 예문에서 해당 단어를 빈칸으로 교체하고 나머지에 루비 추가
@@ -492,7 +562,7 @@ function QuizPage({ quizWords, onComplete }) {
           )}
           <div className="example-japanese">
             {hasAnswered
-              ? addRubyToExample(currentQuiz.example, currentQuiz.exampleHiragana)
+              ? addRubyToExample(currentQuiz.example, currentQuiz.exampleHiragana, currentQuiz.kanji, currentQuiz.hiragana)
               : getExampleWithBlank(currentQuiz.example, currentQuiz.kanji, currentQuiz.exampleHiragana, currentQuiz.hiragana)
             }
           </div>
@@ -501,7 +571,7 @@ function QuizPage({ quizWords, onComplete }) {
               <span className="reading-label">읽는 법:</span>
               <span className="reading-text">
                 {hasAnswered 
-                  ? currentQuiz.exampleRomaji
+                  ? highlightRomaji(currentQuiz.exampleRomaji, currentQuiz.romaji)
                   : currentQuiz.exampleRomaji.replace(currentQuiz.romaji, '____')
                 }
               </span>
@@ -550,7 +620,11 @@ function QuizPage({ quizWords, onComplete }) {
             </button>
           )}
           
-          {!hasAnswered && <div className="button-spacer"></div>}
+          {!hasAnswered && (
+            <button onClick={handleDontKnow} className="dont-know-button">
+              모르겠어요
+            </button>
+          )}
         </div>
 
         {showReviewNotification && (
