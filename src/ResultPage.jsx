@@ -1,50 +1,19 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-
-const STORAGE_KEYS = {
-  REVIEW_WORDS: 'mogumogu_review_words',
-  COMPLETED_WORDS: 'mogumogu_completed_words',
-  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
-}
+import { getIntervalGroupsForDisplay } from './spacedRepetition'
 
 function ResultPage({ quizWords, onBack }) {
-  const [completedWords, setCompletedWords] = useState([])
-  const [reviewWords, setReviewWords] = useState([])
-  const [optionDisplayMode, setOptionDisplayMode] = useState('hiragana')
+  const [intervalGroups, setIntervalGroups] = useState([])
 
   useEffect(() => {
-    // 보기 표시 방식 불러오기 (기본값: hiragana)
-    const savedDisplayMode = localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE) || 'hiragana'
-    setOptionDisplayMode(savedDisplayMode)
-
     // quizWords가 배열이 아니거나 비어있으면 처리하지 않음
     if (!Array.isArray(quizWords) || quizWords.length === 0) {
       return
     }
 
-    const savedCompletedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS) || '[]')
-    const savedReviewWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS) || '[]')
-
-    const completedRomajiSet = new Set(savedCompletedWords.map(w => w.romaji))
-    const reviewRomajiSet = new Set(savedReviewWords.map(w => w.romaji))
-
-    // 퀴즈 단어들을 분류
-    const completed = []
-    const review = []
-
-    quizWords.forEach(word => {
-      if (completedRomajiSet.has(word.romaji)) {
-        completed.push(word)
-      } else if (reviewRomajiSet.has(word.romaji)) {
-        review.push(word)
-      } else {
-        // 둘 다 없으면 복습 대상 (힌트를 보거나 정답보기를 한 경우)
-        review.push(word)
-      }
-    })
-
-    setCompletedWords(completed)
-    setReviewWords(review)
+    // 복습주기별로 그룹화
+    const groups = getIntervalGroupsForDisplay(quizWords)
+    setIntervalGroups(groups)
   }, [quizWords])
 
   return (
@@ -57,39 +26,24 @@ function ResultPage({ quizWords, onBack }) {
             <span className="title-emoji">🍙</span>
           </h1>
 
-          {completedWords.length > 0 && (
-            <div className="result-section">
-              <h2 className="result-section-title">소화한 단어</h2>
+          {intervalGroups.map((group, groupIndex) => (
+            <div key={groupIndex} className="result-section">
+              <h2 className="result-section-title">{group.label} 복습</h2>
               <div className="result-words-list">
-                {completedWords.map((word, index) => (
-                  <div key={index} className="result-word-item completed">
+                {group.words.map((word, index) => (
+                  <div key={index} className="result-word-item">
                     <div className="result-word-kanji">{word.kanji || word.hiragana}</div>
                     <div className="result-word-info">
-                      <div className="result-word-romaji">{optionDisplayMode === 'romaji' ? word.romaji : word.hiragana}</div>
+                      {word.kanji && (
+                        <div className="result-word-romaji">{word.hiragana}</div>
+                      )}
                       <div className="result-word-korean">{word.korean}</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-
-          {reviewWords.length > 0 && (
-            <div className="result-section">
-              <h2 className="result-section-title">복습할 단어</h2>
-              <div className="result-words-list">
-                {reviewWords.map((word, index) => (
-                  <div key={index} className="result-word-item review">
-                    <div className="result-word-kanji">{word.kanji || word.hiragana}</div>
-                    <div className="result-word-info">
-                      <div className="result-word-romaji">{optionDisplayMode === 'romaji' ? word.romaji : word.hiragana}</div>
-                      <div className="result-word-korean">{word.korean}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          ))}
 
           <button onClick={onBack} className="back-button">
             돌아가기

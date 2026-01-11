@@ -102,7 +102,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .progress-bar {
@@ -112,6 +112,7 @@
   border-radius: 10px;
   overflow: visible;
   position: relative;
+  min-width: 0;
 }
 
 .progress-fill {
@@ -124,7 +125,7 @@
 
 .progress-icon {
   position: absolute;
-  right: -12px;
+  right: -8px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 20px;
@@ -147,6 +148,8 @@
   font-size: 14px;
   white-space: nowrap;
   flex-shrink: 0;
+  min-width: 50px;
+  text-align: right;
 }
 
 .word-info {
@@ -185,17 +188,75 @@
 
 .review-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  top: 10px;
+  right: 10px;
+  background: #ff8c42;
   color: white;
   font-size: 12px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(255, 140, 66, 0.25);
   z-index: 5;
   white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.speaker-icon-button {
+  position: absolute;
+  top: 46px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  max-width: 36px;
+  max-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ff8c42;
+  border-radius: 50%;
+  background: white;
+  color: #ff8c42;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 5;
+  padding: 0;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(255, 140, 66, 0.25);
+}
+
+.speaker-icon-button svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.speaker-button-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid #ff9a56;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+  color: #ff8c42;
+  min-height: 48px;
+  flex: 1;
+}
+
+.speaker-button-inline:hover {
+  background: white;
+  color: #ff8c42;
+  border-color: #ff8c42;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 156, 86, 0.4);
 }
 
 .example-label {
@@ -291,33 +352,19 @@
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 20px;
+  min-height: 130px;
 }
 
 .dont-know-button {
   flex: 1;
   padding: 15px 20px;
-  font-size: 15px;
   font-weight: 600;
-  border: 2px solid #6c757d;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s;
-  background: white;
-  color: #6c757d;
-  text-align: center;
-  min-height: 48px;
-}
-
-.dont-know-button:hover:not(:disabled) {
   background: #6c757d;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
-}
-
-.dont-know-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  text-align: center;
+  min-height: 48px;
 }
 
 .option-button {
@@ -451,58 +498,14 @@ button {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s;
   color: white;
   min-height: 48px;
 }
 
-.hint-button {
-  background: #ffc107;
-}
-
-.hint-button:hover:not(:disabled) {
-  background: #ffb300;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
-}
-
-.hint-button:disabled {
-  background: #ffd54f;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.show-answer-button {
-  background: #6c757d;
-}
-
-.show-answer-button:hover {
-  background: #5a6268;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
-}
-
-.submit-button {
-  background: linear-gradient(135deg, #ffd89b 0%, #ff9a56 100%);
-}
-
-.submit-button:hover {
-  background: linear-gradient(135deg, #ffc837 0%, #ff8c42 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 156, 86, 0.4);
-}
-
 .next-button {
+  width: 100%;
   background: #28a745;
-  flex: 1;
 }
-
-.next-button:hover {
-  background: #218838;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-}
-
 
 .complete-message {
   width: 100%;

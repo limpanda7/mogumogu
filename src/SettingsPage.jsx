@@ -1,58 +1,12 @@
-import { useState, useEffect } from 'react'
 import './App.css'
+import { resetMasteryData } from './spacedRepetition'
 
-const STORAGE_KEYS = {
-  COMPLETED_WORDS: 'mogumogu_completed_words',
-  QUIZ_COUNT: 'mogumogu_quiz_count',
-  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
-}
-
-function SettingsPage({ onBack, onCompletedWordsReset }) {
-  const [quizCount, setQuizCount] = useState(5)
-  const [optionDisplayMode, setOptionDisplayMode] = useState('hiragana') // 'hiragana' or 'romaji'
-
-  useEffect(() => {
-    // 저장된 문제 양 불러오기
-    const savedQuizCount = localStorage.getItem(STORAGE_KEYS.QUIZ_COUNT)
-    if (savedQuizCount) {
-      setQuizCount(parseInt(savedQuizCount, 10))
+function SettingsPage({ onBack }) {
+  const handleResetMasteryData = () => {
+    if (window.confirm('모든 단어의 학습 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+      resetMasteryData()
+      alert('학습 데이터가 초기화되었습니다.')
     }
-    
-    // 저장된 보기 표시 방식 불러오기 (기본값: hiragana)
-    const savedDisplayMode = localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE)
-    if (savedDisplayMode) {
-      setOptionDisplayMode(savedDisplayMode)
-    }
-  }, [])
-
-  const handleQuizCountChange = (count) => {
-    setQuizCount(count)
-    localStorage.setItem(STORAGE_KEYS.QUIZ_COUNT, count.toString())
-  }
-
-  const handleDecrease = () => {
-    const newCount = Math.max(5, quizCount - 5)
-    handleQuizCountChange(newCount)
-  }
-
-  const handleIncrease = () => {
-    const newCount = quizCount + 5
-    handleQuizCountChange(newCount)
-  }
-
-  const handleResetCompletedWords = () => {
-    if (window.confirm('소화한 단어를 모두 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_WORDS, JSON.stringify([]))
-      if (onCompletedWordsReset) {
-        onCompletedWordsReset()
-      }
-      alert('소화한 단어가 초기화되었습니다.')
-    }
-  }
-
-  const handleOptionDisplayModeChange = (mode) => {
-    setOptionDisplayMode(mode)
-    localStorage.setItem(STORAGE_KEYS.OPTION_DISPLAY_MODE, mode)
   }
 
   return (
@@ -70,51 +24,11 @@ function SettingsPage({ onBack, onCompletedWordsReset }) {
 
           <div className="settings-section">
             <div className="settings-item-simple">
-              <span className="settings-label">한번에 풀 문제 양</span>
-              <div className="quiz-count-control">
-                <button
-                  onClick={handleDecrease}
-                  className="quiz-count-button-minus"
-                  disabled={quizCount <= 5}
-                >
-                  −
-                </button>
-                <div className="quiz-count-display">
-                  {quizCount}
-                </div>
-                <button
-                  onClick={handleIncrease}
-                  className="quiz-count-button-plus"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <div className="settings-item-simple">
-              <span className="settings-label">보기 표시 방식</span>
-              <div className="option-display-mode-control">
-                <button
-                  onClick={() => handleOptionDisplayModeChange('hiragana')}
-                  className={`option-mode-button ${optionDisplayMode === 'hiragana' ? 'active' : ''}`}
-                >
-                  히라가나
-                </button>
-                <button
-                  onClick={() => handleOptionDisplayModeChange('romaji')}
-                  className={`option-mode-button ${optionDisplayMode === 'romaji' ? 'active' : ''}`}
-                >
-                  로마자
-                </button>
-              </div>
-            </div>
-
-            <div className="settings-item-simple">
               <button
-                onClick={handleResetCompletedWords}
+                onClick={handleResetMasteryData}
                 className="reset-button"
               >
-                소화한 문제 초기화
+                학습 데이터 초기화
               </button>
             </div>
           </div>

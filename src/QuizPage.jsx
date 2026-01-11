@@ -1,13 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import './App.css'
 import { vocabulary, shuffleArray } from './vocabulary'
-
-// localStorage 키
-const STORAGE_KEYS = {
-  REVIEW_WORDS: 'mogumogu_review_words',
-  COMPLETED_WORDS: 'mogumogu_completed_words',
-  OPTION_DISPLAY_MODE: 'mogumogu_option_display_mode'
-}
+import { updateMasteryOnAnswer, isWordDueForReview, isNewWord, getReviewIntervalMessage, getWordMasteryData, REVIEW_INTERVALS } from './spacedRepetition'
+import { synthesizeSpeech } from './firebase'
 
 function QuizPage({ quizWords, onComplete }) {
   // 랜덤하게 섞인 단어 배열 생성
@@ -16,40 +11,35 @@ function QuizPage({ quizWords, onComplete }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [wrongAnswers, setWrongAnswers] = useState([])
   const [hasAnswered, setHasAnswered] = useState(false)
-  const [showReviewNotification, setShowReviewNotification] = useState(false)
+  const [reviewTimeMessage, setReviewTimeMessage] = useState('')
   const timeoutRefs = useRef({})
   const speechSynthesisHandlerRef = useRef(null)
+  const questionStartTimeRef = useRef(Date.now()) // 문제 시작 시간
 
   const currentQuiz = quizData[currentIndex]
   const isLastQuiz = currentIndex === quizData.length - 1
 
-  // 보기 표시 방식 가져오기 (기본값: hiragana)
-  const optionDisplayMode = useMemo(() => {
-    return localStorage.getItem(STORAGE_KEYS.OPTION_DISPLAY_MODE) || 'hiragana'
-  }, [currentIndex])
-
   // 현재 단어가 복습 단어인지 확인
   const isReviewWord = useMemo(() => {
     if (!currentQuiz) return false
-    const savedReviewWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS) || '[]')
-    return savedReviewWords.some(w => w.romaji === currentQuiz.romaji)
+    return isWordDueForReview(currentQuiz.romaji) && !isNewWord(currentQuiz.romaji)
   }, [currentQuiz])
 
   // 같은 품사 내에서 보기 생성
   const options = useMemo(() => {
     if (!currentQuiz || !currentQuiz.partOfSpeech) return []
-    
+
     // 같은 품사를 가진 단어들 필터링
     const samePartOfSpeechWords = vocabulary.filter(
       word => word.partOfSpeech === currentQuiz.partOfSpeech && word.romaji !== currentQuiz.romaji
     )
-    
+
     // 정답 포함하여 4개 선택
     const selectedOptions = []
     const selectedRomaji = new Set()
     selectedOptions.push(currentQuiz) // 정답 추가
     selectedRomaji.add(currentQuiz.romaji) // 정답 romaji 추가
-    
+
     // 나머지 3개를 같은 품사에서 랜덤하게 선택 (중복 방지)
     const shuffled = shuffleArray(samePartOfSpeechWords)
     for (let i = 0; i < shuffled.length && selectedOptions.length < 4; i++) {
@@ -60,7 +50,7 @@ function QuizPage({ quizWords, onComplete }) {
         selectedRomaji.add(word.romaji)
       }
     }
-    
+
     // 보기 섞기
     return shuffleArray(selectedOptions)
   }, [currentQuiz])
@@ -70,16 +60,13 @@ function QuizPage({ quizWords, onComplete }) {
     setSelectedAnswer(null)
     setWrongAnswers([])
     setHasAnswered(false)
-    setShowReviewNotification(false)
+    setReviewTimeMessage('')
+    questionStartTimeRef.current = Date.now() // 첫 문제 시작 시간 초기화
   }, [])
 
   // 컴포넌트 언마운트 시 모든 timeout 및 리소스 정리
   useEffect(() => {
     return () => {
-      // 모든 timeout 정리
-      if (timeoutRefs.current.notification) {
-        clearTimeout(timeoutRefs.current.notification)
-      }
       // speechSynthesis 정리
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel()
@@ -103,57 +90,20 @@ function QuizPage({ quizWords, onComplete }) {
         }
       }
 
+      // Google Cloud TTS 오디오도 중지
+      if (speechSynthesisHandlerRef.current?.audio) {
+        speechSynthesisHandlerRef.current.audio.pause()
+        speechSynthesisHandlerRef.current.audio = null
+      }
+
       setSelectedAnswer(null)
       setWrongAnswers([])
       setHasAnswered(false)
-      setShowReviewNotification(false)
-
-      // timeout 정리
-      if (timeoutRefs.current.notification) {
-        clearTimeout(timeoutRefs.current.notification)
-        timeoutRefs.current.notification = null
-      }
+      setReviewTimeMessage('')
+      questionStartTimeRef.current = Date.now() // 문제 시작 시간 초기화
     }
   }, [currentIndex])
 
-  // 정답 처리 및 저장 로직
-  const processCorrectAnswer = (quiz) => {
-    // 복습 리스트에서 제거 (복습 대상이었던 경우)
-    removeFromReviewWords(quiz)
-    // completed에 추가
-    saveToCompletedWords(quiz)
-  }
-
-  // 로컬 스토리지에 복습 단어 저장
-  const saveToReviewWords = (word) => {
-    const savedReviewWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS) || '[]')
-    const reviewRomajiSet = new Set(savedReviewWords.map(w => w.romaji))
-
-    // 이미 복습 리스트에 없으면 추가
-    if (!reviewRomajiSet.has(word.romaji)) {
-      const newReviewWords = [...savedReviewWords, word]
-      localStorage.setItem(STORAGE_KEYS.REVIEW_WORDS, JSON.stringify(newReviewWords))
-    }
-  }
-
-  // 복습 리스트에서 단어 제거
-  const removeFromReviewWords = (word) => {
-    const savedReviewWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.REVIEW_WORDS) || '[]')
-    const filteredReviewWords = savedReviewWords.filter(w => w.romaji !== word.romaji)
-    localStorage.setItem(STORAGE_KEYS.REVIEW_WORDS, JSON.stringify(filteredReviewWords))
-  }
-
-  // 로컬 스토리지에 완료된 단어 저장
-  const saveToCompletedWords = (word) => {
-    const savedCompletedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_WORDS) || '[]')
-    const completedRomajiSet = new Set(savedCompletedWords.map(w => w.romaji))
-
-    // 이미 저장되지 않은 경우만 추가
-    if (!completedRomajiSet.has(word.romaji)) {
-      const newCompletedWords = [...savedCompletedWords, word]
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_WORDS, JSON.stringify(newCompletedWords))
-    }
-  }
 
   const handleNext = () => {
     if (currentIndex < quizData.length - 1) {
@@ -168,25 +118,37 @@ function QuizPage({ quizWords, onComplete }) {
     if (hasAnswered) return
 
     const isCorrect = option.romaji === currentQuiz.romaji
+    const answerTimeMs = Date.now() - questionStartTimeRef.current // 답변 시간 (밀리초)
+    const answerTimeSeconds = answerTimeMs / 1000 // 답변 시간 (초)
 
     if (isCorrect) {
       // 정답을 맞춘 경우
       setSelectedAnswer(option.romaji)
       setHasAnswered(true)
-      
-      // 오답을 선택한 적이 있으면 복습 대상에 추가
-      if (wrongAnswers.length > 0) {
-        saveToReviewWords(currentQuiz)
-        setShowReviewNotification(true)
-        timeoutRefs.current.notification = setTimeout(() => {
-          setShowReviewNotification(false)
-          timeoutRefs.current.notification = null
-        }, 3000)
+
+      // 정답 패턴 판단:
+      // - 오답 1회 이상 선택 후 정답 선택: 'wrong'
+      // - 5초 이내 정답 선택: 'quick' (빠름)
+      // - 5~10초 이내 정답 선택: 'moderate' (보통)
+      // - 10초 이후 정답 선택: 'slow' (망설임)
+      let answerType
+      if (wrongAnswers.length >= 1) {
+        answerType = 'wrong'
+      } else if (answerTimeSeconds <= 5) {
+        answerType = 'quick'
+      } else if (answerTimeSeconds <= 10) {
+        answerType = 'moderate'
       } else {
-        // 오답 없이 바로 정답을 맞춘 경우에만 completed에 추가
-        processCorrectAnswer(currentQuiz)
+        answerType = 'slow'
       }
-      
+
+      // 숙련도 업데이트
+      const masteryData = updateMasteryOnAnswer(currentQuiz.romaji, answerType, answerTimeMs)
+
+      // 복습 간격 메시지 설정
+      const reviewTimeText = getReviewIntervalMessage(masteryData.currentInterval)
+      setReviewTimeMessage(reviewTimeText)
+
       // TTS로 예문 읽기
       speakText(currentQuiz.exampleHiragana || currentQuiz.example)
     } else {
@@ -200,25 +162,91 @@ function QuizPage({ quizWords, onComplete }) {
   const handleDontKnow = () => {
     if (hasAnswered) return
 
-    // 복습 대상에 추가
-    saveToReviewWords(currentQuiz)
-    
     // 정답 공개
     setSelectedAnswer(currentQuiz.romaji)
     setHasAnswered(true)
-    
-    // 복습 대상 추가 알림 표시
-    setShowReviewNotification(true)
-    timeoutRefs.current.notification = setTimeout(() => {
-      setShowReviewNotification(false)
-      timeoutRefs.current.notification = null
-    }, 3000)
-    
+
+    // 숙련도 업데이트 (모르겠음 = wrong 처리)
+    const answerTime = Date.now() - questionStartTimeRef.current
+    const masteryData = updateMasteryOnAnswer(currentQuiz.romaji, 'wrong', answerTime)
+
+    // 복습 간격 메시지 설정
+    const reviewTimeText = getReviewIntervalMessage(masteryData.currentInterval)
+    setReviewTimeMessage(reviewTimeText)
+
     // TTS로 예문 읽기
     speakText(currentQuiz.exampleHiragana || currentQuiz.example)
   }
 
-  const speakText = (text) => {
+  const speakText = async (text) => {
+    if (!text) return
+
+    try {
+      // 기존 재생 중지
+      if (speechSynthesisHandlerRef.current?.audio) {
+        speechSynthesisHandlerRef.current.audio.pause()
+        speechSynthesisHandlerRef.current.audio = null
+      }
+
+      // 텍스트가 비어있지 않은지 확인
+      const textToSpeak = text.trim()
+      if (!textToSpeak) return
+
+      // Google Cloud TTS API 호출
+      const result = await synthesizeSpeech({
+        text: textToSpeak,
+        languageCode: 'ja-JP',
+        voiceName: 'ja-JP-Neural2-B' // 일본어 여성 음성 (A, B: 여성 / C, D: 남성)
+      })
+
+      // Base64 디코딩
+      const audioContent = result.data.audioContent
+      const audioBlob = new Blob([
+        Uint8Array.from(atob(audioContent), c => c.charCodeAt(0))
+      ], { type: 'audio/mp3' })
+
+      // 오디오 재생
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const audio = new Audio(audioUrl)
+
+      // 재생 완료 시 리소스 정리
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl)
+        if (speechSynthesisHandlerRef.current) {
+          speechSynthesisHandlerRef.current.audio = null
+        }
+      }
+
+      audio.onerror = (error) => {
+        console.error('오디오 재생 오류:', error)
+        URL.revokeObjectURL(audioUrl)
+        if (speechSynthesisHandlerRef.current) {
+          speechSynthesisHandlerRef.current.audio = null
+        }
+        // 오류 발생 시 기존 Web Speech API로 폴백
+        fallbackToWebSpeech(textToSpeak)
+      }
+
+      // 현재 재생 중인 오디오 저장
+      speechSynthesisHandlerRef.current = { audio }
+
+      // 오디오 재생 (Promise 처리)
+      try {
+        await audio.play()
+      } catch (playError) {
+        console.error('오디오 재생 시작 오류:', playError)
+        // 재생 실패 시 Web Speech API로 폴백
+        fallbackToWebSpeech(textToSpeak)
+      }
+    } catch (error) {
+      console.error('TTS API 호출 오류:', error)
+      // 오류 발생 시 기존 Web Speech API로 폴백
+      fallbackToWebSpeech(text.trim())
+    }
+  }
+
+  // Web Speech API 폴백 함수
+  const fallbackToWebSpeech = (text) => {
     if ('speechSynthesis' in window && text) {
       // 기존 재생 중지 및 이전 핸들러 제거
       window.speechSynthesis.cancel()
@@ -299,143 +327,88 @@ function QuizPage({ quizWords, onComplete }) {
   }
 
   // 예문에 한자 위에 히라가나 루비 추가 (정답 표시 시 해당 단어 색칠)
-  const addRubyToExample = (example, exampleHiragana, kanji, hiragana) => {
+  // exampleRuby: [{ '青': 'あお' }, { '空': 'そら' }] 형태 사용
+  const addRubyToExample = (example, exampleRuby, kanji, hiragana) => {
+    if (!example) return null
+    
     const result = []
     let exampleIndex = 0
-    let hiraganaIndex = 0
-    let prevExampleIndex = exampleIndex
-    let iterationCount = 0
-    const maxIterations = example.length * 2
     
-    // 해당 단어의 위치 찾기
-    const hasKanji = kanji && kanji.length > 0
-    const kanjiIndex = hasKanji ? example.indexOf(kanji) : -1
-    const hiraganaIndexInExample = !hasKanji && hiragana && hiragana.length > 0 
-      ? example.indexOf(hiragana) 
-      : -1
-    const targetStartIndex = hasKanji ? kanjiIndex : hiraganaIndexInExample
-    const targetEndIndex = hasKanji 
-      ? (kanjiIndex !== -1 ? kanjiIndex + kanji.length : -1)
-      : (hiraganaIndexInExample !== -1 ? hiraganaIndexInExample + hiragana.length : -1)
-
-    while (exampleIndex < example.length && iterationCount < maxIterations) {
-      iterationCount++
-      const exampleChar = example[exampleIndex]
-      const isKanji = /[\u4e00-\u9faf]/.test(exampleChar)
-
-      if (isKanji) {
-        let kanjiStart = exampleIndex
-        let kanjiEnd = exampleIndex + 1
-        while (kanjiEnd < example.length && /[\u4e00-\u9faf]/.test(example[kanjiEnd])) {
-          kanjiEnd++
-        }
-
-        const kanjiGroup = example.substring(kanjiStart, kanjiEnd)
-        let hiraganaStart = hiraganaIndex
-        let hiraganaEnd = hiraganaStart
-        const nextNonKanjiIndex = kanjiEnd < example.length ? kanjiEnd : example.length
-        const nextNonKanjiChar = nextNonKanjiIndex < example.length ? example[nextNonKanjiIndex] : null
-        let prevHiraganaEnd = hiraganaEnd
-
-        while (hiraganaEnd < exampleHiragana.length) {
-          const hiraganaChar = exampleHiragana[hiraganaEnd]
-          if (!/[\u3040-\u309f\u30a0-\u30ff]/.test(hiraganaChar)) {
-            if (nextNonKanjiChar && hiraganaChar === nextNonKanjiChar) {
-              break
-            }
-            if (!nextNonKanjiChar) {
-              break
-            }
-            hiraganaEnd++
-          } else {
-            hiraganaEnd++
-            if (nextNonKanjiChar && hiraganaEnd < exampleHiragana.length) {
-              if (exampleHiragana[hiraganaEnd] === nextNonKanjiChar) {
-                break
-              }
-            }
-          }
+    // example에서 kanji 위치 찾기 (정답 단어 하이라이트용)
+    const kanjiStartIndex = kanji ? example.indexOf(kanji) : -1
+    const kanjiEndIndex = kanjiStartIndex !== -1 ? kanjiStartIndex + kanji.length : -1
+    
+    // kanji가 없는 경우 example에서 hiragana 위치 찾기
+    const hiraganaStartIndex = !kanji && hiragana ? example.indexOf(hiragana) : -1
+    const hiraganaEndIndex = hiraganaStartIndex !== -1 ? hiraganaStartIndex + hiragana.length : -1
+    
+    // exampleRuby 배열을 맵으로 변환하여 빠른 검색 가능하게 함
+    const rubyMap = new Map()
+    if (Array.isArray(exampleRuby)) {
+      exampleRuby.forEach(rubyObj => {
+        Object.entries(rubyObj).forEach(([kanjiText, hiraganaText]) => {
+          rubyMap.set(kanjiText, hiraganaText)
+        })
+      })
+    }
+    
+    while (exampleIndex < example.length) {
+      let matched = false
+      
+      // exampleRuby에서 가장 긴 한자부터 매칭 시도 (긴 한자가 우선)
+      const sortedRubyEntries = Array.from(rubyMap.entries()).sort((a, b) => b[0].length - a[0].length)
+      
+      for (const [kanjiText, hiraganaText] of sortedRubyEntries) {
+        if (example.substring(exampleIndex).startsWith(kanjiText)) {
+          // 정답 단어인지 확인
+          const isKanjiInTarget = kanjiStartIndex !== -1 &&
+            exampleIndex >= kanjiStartIndex && exampleIndex < kanjiEndIndex
           
-          if (hiraganaEnd === prevHiraganaEnd) {
-            break
-          }
-          prevHiraganaEnd = hiraganaEnd
-        }
-
-        const hiraganaGroup = exampleHiragana.substring(hiraganaStart, hiraganaEnd)
-        
-        // 해당 단어 부분인지 확인하여 색칠
-        const isTargetWord = targetStartIndex !== -1 && 
-          kanjiStart >= targetStartIndex && kanjiStart < targetEndIndex
-
-        if (hiraganaGroup) {
+          // 루비 태그 추가
           result.push(
-            <ruby key={exampleIndex} className={isTargetWord ? 'highlighted-word' : ''}>
-              {kanjiGroup}
-              <rt className={isTargetWord ? 'highlighted-reading' : ''}>{hiraganaGroup}</rt>
+            <ruby key={exampleIndex} className={isKanjiInTarget ? 'highlighted-word' : ''}>
+              {kanjiText}
+              <rt className={isKanjiInTarget ? 'highlighted-reading' : ''}>{hiraganaText}</rt>
             </ruby>
           )
-          hiraganaIndex = hiraganaEnd
-        } else {
-          const isTargetWord = targetStartIndex !== -1 && 
-            kanjiStart >= targetStartIndex && kanjiStart < targetEndIndex
-          result.push(
-            <span key={exampleIndex} className={isTargetWord ? 'highlighted-word' : ''}>
-              {kanjiGroup}
-            </span>
-          )
+          
+          exampleIndex += kanjiText.length
+          matched = true
+          break
         }
-
-        exampleIndex = Math.max(kanjiEnd, exampleIndex + 1)
-      } else {
-        // 해당 단어 부분인지 확인하여 색칠
-        const isTargetWord = targetStartIndex !== -1 && 
-          exampleIndex >= targetStartIndex && exampleIndex < targetEndIndex
-        
-        result.push(
-          <span key={exampleIndex} className={isTargetWord ? 'highlighted-word' : ''}>
-            {exampleChar}
-          </span>
-        )
-
-        if (hiraganaIndex < exampleHiragana.length) {
-          if (exampleHiragana[hiraganaIndex] === exampleChar) {
-            hiraganaIndex++
-          } else {
-            const isKatakana = /[\u30a0-\u30ff]/.test(exampleChar)
-            const isHiragana = /[\u3040-\u309f]/.test(exampleChar)
-
-            if ((isKatakana || isHiragana) && /[\u3040-\u309f]/.test(exampleHiragana[hiraganaIndex])) {
-              hiraganaIndex++
-            } else if (isHiragana && exampleHiragana[hiraganaIndex] !== exampleChar) {
-              hiraganaIndex++
-            }
-          }
-        }
-
-        exampleIndex++
       }
       
-      if (exampleIndex === prevExampleIndex) {
+      if (!matched) {
+        // 한자가 아닌 문자 처리
+        const char = example[exampleIndex]
+        const isInKanjiTarget = kanjiStartIndex !== -1 &&
+          exampleIndex >= kanjiStartIndex && exampleIndex < kanjiEndIndex
+        const isInHiraganaTarget = hiraganaStartIndex !== -1 &&
+          exampleIndex >= hiraganaStartIndex && exampleIndex < hiraganaEndIndex
+        
+        result.push(
+          <span key={exampleIndex} className={isInKanjiTarget || isInHiraganaTarget ? 'highlighted-word' : ''}>
+            {char}
+          </span>
+        )
         exampleIndex++
       }
-      prevExampleIndex = exampleIndex
     }
-
+    
     return <>{result}</>
   }
-  
+
   // 발음(romaji)에서 해당 단어 부분 색칠
   const highlightRomaji = (exampleRomaji, romaji) => {
     if (!romaji || !exampleRomaji) return exampleRomaji
-    
+
     const index = exampleRomaji.indexOf(romaji)
     if (index === -1) return exampleRomaji
-    
+
     const before = exampleRomaji.substring(0, index)
     const highlighted = romaji
     const after = exampleRomaji.substring(index + romaji.length)
-    
+
     return (
       <>
         {before}
@@ -446,100 +419,72 @@ function QuizPage({ quizWords, onComplete }) {
   }
 
   // 예문에서 해당 단어를 빈칸으로 교체하고 나머지에 루비 추가
-  const getExampleWithBlank = (example, kanji, exampleHiragana, hiragana) => {
+  // exampleRuby: [{ '青': 'あお' }, { '空': 'そら' }] 형태 사용
+  const getExampleWithBlank = (example, kanji, exampleRuby, hiragana) => {
+    if (!example) return null
+    
     const result = []
-    let hiraganaIndex = 0
+    let exampleIndex = 0
+    
     const hasKanji = kanji && kanji.length > 0
     const kanjiIndex = hasKanji ? example.indexOf(kanji) : -1
-    const hiraganaIndexInExample = !hasKanji && hiragana && hiragana.length > 0 
-      ? example.indexOf(hiragana) 
+    const hiraganaIndexInExample = !hasKanji && hiragana && hiragana.length > 0
+      ? example.indexOf(hiragana)
       : -1
-
-    for (let i = 0; i < example.length; i++) {
-      if (hasKanji && i === kanjiIndex && kanjiIndex !== -1) {
-        result.push(<span key={i} className="blank">____</span>)
-        hiraganaIndex += hiragana && hiragana.length > 0 ? hiragana.length : 0
-        i += Math.max(kanji.length - 1, 0)
+    
+    // exampleRuby 배열을 맵으로 변환하여 빠른 검색 가능하게 함
+    const rubyMap = new Map()
+    if (Array.isArray(exampleRuby)) {
+      exampleRuby.forEach(rubyObj => {
+        Object.entries(rubyObj).forEach(([kanjiText, hiraganaText]) => {
+          rubyMap.set(kanjiText, hiraganaText)
+        })
+      })
+    }
+    
+    while (exampleIndex < example.length) {
+      // 정답 단어 위치인지 확인
+      if (hasKanji && exampleIndex === kanjiIndex && kanjiIndex !== -1) {
+        result.push(<span key={exampleIndex} className="blank">____</span>)
+        exampleIndex += kanji.length
         continue
       }
       
-      if (!hasKanji && i === hiraganaIndexInExample && hiraganaIndexInExample !== -1 && hiragana && hiragana.length > 0) {
-        result.push(<span key={i} className="blank">____</span>)
-        hiraganaIndex += hiragana.length
-        i += Math.max(hiragana.length - 1, 0)
+      if (!hasKanji && exampleIndex === hiraganaIndexInExample && hiraganaIndexInExample !== -1 && hiragana && hiragana.length > 0) {
+        result.push(<span key={exampleIndex} className="blank">____</span>)
+        exampleIndex += hiragana.length
         continue
       }
-
-      const char = example[i]
-      const isKanji = /[\u4e00-\u9faf]/.test(char)
-
-      if (isKanji) {
-        let kanjiStart = i
-        let kanjiEnd = i + 1
-        while (kanjiEnd < example.length && /[\u4e00-\u9faf]/.test(example[kanjiEnd])) {
-          kanjiEnd++
-        }
-
-        const kanjiGroup = example.substring(kanjiStart, kanjiEnd)
-        let hiraganaStart = hiraganaIndex
-        let hiraganaEnd = hiraganaStart
-        let prevHiraganaEnd = hiraganaEnd
-
-        while (hiraganaEnd < exampleHiragana.length) {
-          const hiraganaChar = exampleHiragana[hiraganaEnd]
-          if (!/[\u3040-\u309f\u30a0-\u30ff]/.test(hiraganaChar)) {
-            break
-          }
-          hiraganaEnd++
-          if (kanjiEnd < example.length) {
-            const nextChar = example[kanjiEnd]
-            if (!/[\u4e00-\u9faf]/.test(nextChar)) {
-              if (hiraganaEnd < exampleHiragana.length && exampleHiragana[hiraganaEnd] === nextChar) {
-                break
-              }
-            }
-          }
-          
-          if (hiraganaEnd === prevHiraganaEnd) {
-            break
-          }
-          prevHiraganaEnd = hiraganaEnd
-        }
-
-        const hiraganaGroup = exampleHiragana.substring(hiraganaStart, hiraganaEnd)
-
-        if (hiraganaGroup) {
+      
+      let matched = false
+      
+      // exampleRuby에서 가장 긴 한자부터 매칭 시도 (긴 한자가 우선)
+      const sortedRubyEntries = Array.from(rubyMap.entries()).sort((a, b) => b[0].length - a[0].length)
+      
+      for (const [kanjiText, hiraganaText] of sortedRubyEntries) {
+        if (example.substring(exampleIndex).startsWith(kanjiText)) {
+          // 루비 태그 추가
           result.push(
-            <ruby key={i}>
-              {kanjiGroup}
-              <rt>{hiraganaGroup}</rt>
+            <ruby key={exampleIndex}>
+              {kanjiText}
+              <rt>{hiraganaText}</rt>
             </ruby>
           )
-          hiraganaIndex = hiraganaEnd
-        } else {
-          result.push(kanjiGroup)
-        }
-
-        i = kanjiEnd - 1
-      } else {
-        result.push(char)
-        
-        if (hiraganaIndex < exampleHiragana.length) {
-          if (exampleHiragana[hiraganaIndex] === char) {
-            hiraganaIndex++
-          } else {
-            const isKatakana = /[\u30a0-\u30ff]/.test(char)
-            const isHiragana = /[\u3040-\u309f]/.test(char)
-            const isHiraganaInExample = /[\u3040-\u309f]/.test(exampleHiragana[hiraganaIndex])
-            
-            if ((isKatakana || isHiragana) && isHiraganaInExample) {
-              hiraganaIndex++
-            }
-          }
+          
+          exampleIndex += kanjiText.length
+          matched = true
+          break
         }
       }
+      
+      if (!matched) {
+        // 한자가 아닌 문자 처리
+        const char = example[exampleIndex]
+        result.push(<span key={exampleIndex}>{char}</span>)
+        exampleIndex++
+      }
     }
-
+    
     return <>{result}</>
   }
 
@@ -556,8 +501,8 @@ function QuizPage({ quizWords, onComplete }) {
           </button>
           <div className="progress-container">
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
+              <div
+                className="progress-fill"
                 style={{ width: `${((currentIndex + 1) / quizData.length) * 100}%` }}
               >
                 <span className="progress-icon">🍙</span>
@@ -570,41 +515,45 @@ function QuizPage({ quizWords, onComplete }) {
         </div>
 
         <div className="example-section">
-          {isReviewWord && (
+          {!hasAnswered && isReviewWord && (
             <div className="review-badge">복습</div>
+          )}
+          {hasAnswered && reviewTimeMessage && (
+            <div className="review-badge">{reviewTimeMessage} 복습</div>
+          )}
+          {hasAnswered && (
+            <button
+              onClick={() => speakText(currentQuiz.exampleHiragana || currentQuiz.example)}
+              className="speaker-icon-button"
+              aria-label="예문 발음 듣기"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+              </svg>
+            </button>
           )}
           <div className="example-japanese">
             {hasAnswered
-              ? addRubyToExample(currentQuiz.example, currentQuiz.exampleHiragana, currentQuiz.kanji, currentQuiz.hiragana)
-              : getExampleWithBlank(currentQuiz.example, currentQuiz.kanji, currentQuiz.exampleHiragana, currentQuiz.hiragana)
+              ? addRubyToExample(currentQuiz.example, currentQuiz.exampleRuby, currentQuiz.kanji, currentQuiz.hiragana)
+              : getExampleWithBlank(currentQuiz.example, currentQuiz.kanji, currentQuiz.exampleRuby, currentQuiz.hiragana)
             }
           </div>
-          {optionDisplayMode === 'romaji' && (
-            <div className="example-reading">
-              <div className="reading-item">
-                <span className="reading-label">읽는 법:</span>
-                <span className="reading-text">
-                  {hasAnswered 
-                    ? highlightRomaji(currentQuiz.exampleRomaji, currentQuiz.romaji)
-                    : currentQuiz.exampleRomaji.replace(currentQuiz.romaji, '____')
-                  }
-                </span>
-              </div>
-            </div>
-          )}
           <div className="example-korean">{currentQuiz.exampleKorean}</div>
         </div>
 
         <div className="options-container">
           {options.map((option, index) => {
-            const isSelected = selectedAnswer === option.romaji
             const isCorrect = option.romaji === currentQuiz.romaji
             const isWrong = wrongAnswers.includes(option.romaji)
-            const showCorrect = hasAnswered && isCorrect
-            
+            const isSelected = hasAnswered && selectedAnswer === option.romaji
+
             let buttonClass = 'option-button'
-            if (showCorrect) {
-              buttonClass += ' correct'
+            if (hasAnswered) {
+              if (isCorrect) {
+                buttonClass += ' correct'
+              } else if (isWrong) {
+                buttonClass += ' incorrect'
+              }
             } else if (isWrong) {
               buttonClass += ' incorrect'
             }
@@ -616,37 +565,33 @@ function QuizPage({ quizWords, onComplete }) {
                 disabled={hasAnswered}
                 className={buttonClass}
               >
-                {optionDisplayMode === 'romaji' ? option.romaji : option.hiragana}
+                {option.hiragana}
               </button>
             )
           })}
         </div>
 
         <div className="button-group">
-          {hasAnswered && !isLastQuiz && (
-            <button onClick={handleNext} className="next-button">
-              다음 문제
-            </button>
-          )}
-
-          {hasAnswered && isLastQuiz && (
-            <button onClick={handleNext} className="next-button">
-              완료
-            </button>
-          )}
-          
-          {!hasAnswered && (
+          {hasAnswered ? (
+            <>
+              {!isLastQuiz && (
+                <button onClick={handleNext} className="next-button full-width">
+                  다음 문제
+                </button>
+              )}
+              {isLastQuiz && (
+                <button onClick={handleNext} className="next-button full-width">
+                  완료
+                </button>
+              )}
+            </>
+          ) : (
             <button onClick={handleDontKnow} className="dont-know-button">
               모르겠어요
             </button>
           )}
         </div>
 
-        {showReviewNotification && (
-          <div className="review-notification">
-            다음번 퀴즈에서 복습할게요
-          </div>
-        )}
       </div>
     </div>
   )
