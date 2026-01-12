@@ -1382,9 +1382,9 @@ export const vocabulary = [
     korean: '지갑',
     english: 'Wallet',
     partOfSpeech: 'noun',
-    example: '財布を忘れる',
-    exampleRuby: [{ 財布: 'さいふ' }, { 忘: 'わす' }],
-    exampleKorean: '지갑을 잊다'
+    example: '財布を無くす',
+    exampleRuby: [{ 財布: 'さいふ' }, { 無: 'な' }],
+    exampleKorean: '지갑을 잃어버리다'
   },
   {
     kanji: '魚',
@@ -3381,7 +3381,7 @@ export const vocabulary = [
     kanji: '無くす',
     hiragana: 'なくす',
     romaji: 'nakusu',
-    korean: '없애다',
+    korean: '잃다',
     english: 'to lose something',
     partOfSpeech: 'verb',
     example: '財布を無くす',
