@@ -5669,12 +5669,12 @@ export const vocabulary = [
     kanji: '',
     hiragana: 'レコード',
     romaji: 'rekoodo',
-    korean: '기록',
-    english: 'record',
+    korean: '레코드, 음반',
+    english: 'record (vinyl)',
     partOfSpeech: 'noun',
-    example: 'レコードをかける',
-    exampleRuby: [],
-    exampleKorean: '레코드를 재생하다'
+    example: 'レコードを聞く',
+    exampleRuby: [{ 聞: 'き' }],
+    exampleKorean: '레코드를 듣다'
   },
   {
     kanji: '',
