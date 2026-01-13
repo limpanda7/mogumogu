@@ -5766,17 +5766,6 @@ export const vocabulary = [
   },
   {
     kanji: '私',
-    hiragana: 'わたくし',
-    romaji: 'watakushi',
-    korean: '나',
-    english: '(humble) I, myself',
-    partOfSpeech: 'pronoun',
-    example: '私がします',
-    exampleRuby: [{ 私: 'わたくし' }],
-    exampleKorean: '제가 하겠습니다'
-  },
-  {
-    kanji: '私',
     hiragana: 'わたし',
     romaji: 'watashi',
     korean: '나',

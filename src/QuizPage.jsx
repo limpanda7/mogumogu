@@ -12,9 +12,16 @@ function QuizPage({ quizWords, onComplete }) {
   const [wrongAnswers, setWrongAnswers] = useState([])
   const [hasAnswered, setHasAnswered] = useState(false)
   const [reviewTimeMessage, setReviewTimeMessage] = useState('')
+  const [selectedOptionWord, setSelectedOptionWord] = useState(null) // 정답 화면에서 클릭한 보기 단어
+  // 보기 힌트 말풍선 표시 여부 - 초기값은 로컬스토리지 확인 결과
+  const [showOptionHint, setShowOptionHint] = useState(() => {
+    const hintDismissed = localStorage.getItem('mogumogu_option_hint_dismissed')
+    return !hintDismissed // 값이 없으면 true (표시), 있으면 false (숨김)
+  })
   const timeoutRefs = useRef({})
   const speechSynthesisHandlerRef = useRef(null)
   const questionStartTimeRef = useRef(Date.now()) // 문제 시작 시간
+  const preloadedAudioRef = useRef(null) // 미리 로드된 오디오
 
   const currentQuiz = quizData[currentIndex]
   const isLastQuiz = currentIndex === quizData.length - 1
@@ -22,7 +29,7 @@ function QuizPage({ quizWords, onComplete }) {
   // 현재 단어가 복습 단어인지 확인
   const isReviewWord = useMemo(() => {
     if (!currentQuiz) return false
-    return isWordDueForReview(currentQuiz.romaji) && !isNewWord(currentQuiz.romaji)
+    return isWordDueForReview(currentQuiz) && !isNewWord(currentQuiz)
   }, [currentQuiz])
 
   // 같은 품사 내에서 보기 생성
@@ -75,10 +82,18 @@ function QuizPage({ quizWords, onComplete }) {
           speechSynthesisHandlerRef.current = null
         }
       }
+
+      // 미리 로드된 오디오 정리
+      if (preloadedAudioRef.current) {
+        if (preloadedAudioRef.current.audioUrl) {
+          URL.revokeObjectURL(preloadedAudioRef.current.audioUrl)
+        }
+        preloadedAudioRef.current = null
+      }
     }
   }, [])
 
-  // 문제가 변경되면 상태 초기화
+  // 문제가 변경되면 상태 초기화 및 발음 미리 로드
   useEffect(() => {
     if (currentIndex > 0 || selectedAnswer !== null || hasAnswered) {
       // speechSynthesis 정리
@@ -96,13 +111,27 @@ function QuizPage({ quizWords, onComplete }) {
         speechSynthesisHandlerRef.current.audio = null
       }
 
+      // 이전 문제의 미리 로드된 오디오 정리
+      if (preloadedAudioRef.current) {
+        if (preloadedAudioRef.current.audioUrl) {
+          URL.revokeObjectURL(preloadedAudioRef.current.audioUrl)
+        }
+        preloadedAudioRef.current = null
+      }
+
       setSelectedAnswer(null)
       setWrongAnswers([])
       setHasAnswered(false)
       setReviewTimeMessage('')
+      setSelectedOptionWord(null) // 선택된 보기 단어 초기화
       questionStartTimeRef.current = Date.now() // 문제 시작 시간 초기화
     }
-  }, [currentIndex])
+
+    // 현재 문제의 발음 미리 로드
+    if (currentQuiz) {
+      preloadAudio(currentQuiz.exampleHiragana || currentQuiz.example)
+    }
+  }, [currentIndex, currentQuiz])
 
 
   const handleNext = () => {
@@ -115,7 +144,22 @@ function QuizPage({ quizWords, onComplete }) {
   }
 
   const handleAnswerSelect = (option) => {
-    if (hasAnswered) return
+    // 정답 화면에서 정답이 아닌 보기를 클릭한 경우
+    if (hasAnswered) {
+      const isCorrect = option.romaji === currentQuiz.romaji
+      if (!isCorrect) {
+        // 정답이 아닌 보기를 클릭하면 단어 정보 표시
+        const wasSelected = selectedOptionWord?.romaji === option.romaji
+        setSelectedOptionWord(wasSelected ? null : option)
+        
+        // 카드를 뒤집을 때만 발음 재생 (이미 뒤집혀 있으면 재생하지 않음)
+        if (!wasSelected) {
+          // 히라가나로 발음 재생
+          speakText(option.hiragana)
+        }
+      }
+      return
+    }
 
     const isCorrect = option.romaji === currentQuiz.romaji
     const answerTimeMs = Date.now() - questionStartTimeRef.current // 답변 시간 (밀리초)
@@ -143,7 +187,7 @@ function QuizPage({ quizWords, onComplete }) {
       }
 
       // 숙련도 업데이트
-      const masteryData = updateMasteryOnAnswer(currentQuiz.romaji, answerType, answerTimeMs)
+      const masteryData = updateMasteryOnAnswer(currentQuiz, answerType, answerTimeMs)
 
       // 복습 간격 메시지 설정
       const reviewTimeText = getReviewIntervalMessage(masteryData.currentInterval)
@@ -168,7 +212,7 @@ function QuizPage({ quizWords, onComplete }) {
 
     // 숙련도 업데이트 (모르겠음 = wrong 처리)
     const answerTime = Date.now() - questionStartTimeRef.current
-    const masteryData = updateMasteryOnAnswer(currentQuiz.romaji, 'wrong', answerTime)
+    const masteryData = updateMasteryOnAnswer(currentQuiz, 'wrong', answerTime)
 
     // 복습 간격 메시지 설정
     const reviewTimeText = getReviewIntervalMessage(masteryData.currentInterval)
@@ -176,6 +220,44 @@ function QuizPage({ quizWords, onComplete }) {
 
     // TTS로 예문 읽기
     speakText(currentQuiz.exampleHiragana || currentQuiz.example)
+  }
+
+  // 발음 미리 로드 함수
+  const preloadAudio = async (text) => {
+    if (!text) return
+
+    const textToSpeak = text.trim()
+    if (!textToSpeak) return
+
+    try {
+      // Google Cloud TTS API 호출
+      const result = await synthesizeSpeech({
+        text: textToSpeak,
+        languageCode: 'ja-JP',
+        voiceName: 'ja-JP-Neural2-B' // 일본어 여성 음성 (A, B: 여성 / C, D: 남성)
+      })
+
+      // Base64 디코딩
+      const audioContent = result.data.audioContent
+      const audioBlob = new Blob([
+        Uint8Array.from(atob(audioContent), c => c.charCodeAt(0))
+      ], { type: 'audio/mp3' })
+
+      // 오디오 URL 생성 및 저장
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const audio = new Audio(audioUrl)
+
+      // 미리 로드된 오디오 저장
+      preloadedAudioRef.current = {
+        audio,
+        audioUrl,
+        text: textToSpeak
+      }
+    } catch (error) {
+      console.error('발음 미리 로드 오류:', error)
+      // 오류 발생 시 preloadedAudioRef를 null로 설정하여 기존 방식으로 폴백
+      preloadedAudioRef.current = null
+    }
   }
 
   const speakText = async (text) => {
@@ -192,7 +274,45 @@ function QuizPage({ quizWords, onComplete }) {
       const textToSpeak = text.trim()
       if (!textToSpeak) return
 
-      // Google Cloud TTS API 호출
+      // 미리 로드된 오디오가 있고 텍스트가 일치하는지 확인
+      if (preloadedAudioRef.current &&
+          preloadedAudioRef.current.text === textToSpeak &&
+          preloadedAudioRef.current.audioUrl) {
+        // 미리 로드된 오디오 URL로 새 Audio 인스턴스 생성
+        const audio = new Audio(preloadedAudioRef.current.audioUrl)
+
+        // 재생 완료 시 리소스 정리 (원본은 유지)
+        audio.onended = () => {
+          if (speechSynthesisHandlerRef.current) {
+            speechSynthesisHandlerRef.current.audio = null
+          }
+        }
+
+        audio.onerror = (error) => {
+          console.error('오디오 재생 오류:', error)
+          if (speechSynthesisHandlerRef.current) {
+            speechSynthesisHandlerRef.current.audio = null
+          }
+          // 오류 발생 시 기존 Web Speech API로 폴백
+          fallbackToWebSpeech(textToSpeak)
+        }
+
+        // 현재 재생 중인 오디오 저장
+        speechSynthesisHandlerRef.current = { audio }
+
+        // 오디오 재생 (Promise 처리)
+        try {
+          await audio.play()
+          return // 성공적으로 재생되면 종료
+        } catch (playError) {
+          console.error('오디오 재생 시작 오류:', playError)
+          // 재생 실패 시 Web Speech API로 폴백
+          fallbackToWebSpeech(textToSpeak)
+          return
+        }
+      }
+
+      // 미리 로드된 오디오가 없는 경우 기존 방식으로 API 호출
       const result = await synthesizeSpeech({
         text: textToSpeak,
         languageCode: 'ja-JP',
@@ -330,18 +450,18 @@ function QuizPage({ quizWords, onComplete }) {
   // exampleRuby: [{ '青': 'あお' }, { '空': 'そら' }] 형태 사용
   const addRubyToExample = (example, exampleRuby, kanji, hiragana) => {
     if (!example) return null
-    
+
     const result = []
     let exampleIndex = 0
-    
+
     // example에서 kanji 위치 찾기 (정답 단어 하이라이트용)
     const kanjiStartIndex = kanji ? example.indexOf(kanji) : -1
     const kanjiEndIndex = kanjiStartIndex !== -1 ? kanjiStartIndex + kanji.length : -1
-    
+
     // kanji가 없는 경우 example에서 hiragana 위치 찾기
     const hiraganaStartIndex = !kanji && hiragana ? example.indexOf(hiragana) : -1
     const hiraganaEndIndex = hiraganaStartIndex !== -1 ? hiraganaStartIndex + hiragana.length : -1
-    
+
     // exampleRuby 배열을 맵으로 변환하여 빠른 검색 가능하게 함
     const rubyMap = new Map()
     if (Array.isArray(exampleRuby)) {
@@ -351,19 +471,19 @@ function QuizPage({ quizWords, onComplete }) {
         })
       })
     }
-    
+
     while (exampleIndex < example.length) {
       let matched = false
-      
+
       // exampleRuby에서 가장 긴 한자부터 매칭 시도 (긴 한자가 우선)
       const sortedRubyEntries = Array.from(rubyMap.entries()).sort((a, b) => b[0].length - a[0].length)
-      
+
       for (const [kanjiText, hiraganaText] of sortedRubyEntries) {
         if (example.substring(exampleIndex).startsWith(kanjiText)) {
           // 정답 단어인지 확인
           const isKanjiInTarget = kanjiStartIndex !== -1 &&
             exampleIndex >= kanjiStartIndex && exampleIndex < kanjiEndIndex
-          
+
           // 루비 태그 추가
           result.push(
             <ruby key={exampleIndex} className={isKanjiInTarget ? 'highlighted-word' : ''}>
@@ -371,13 +491,13 @@ function QuizPage({ quizWords, onComplete }) {
               <rt className={isKanjiInTarget ? 'highlighted-reading' : ''}>{hiraganaText}</rt>
             </ruby>
           )
-          
+
           exampleIndex += kanjiText.length
           matched = true
           break
         }
       }
-      
+
       if (!matched) {
         // 한자가 아닌 문자 처리
         const char = example[exampleIndex]
@@ -385,7 +505,7 @@ function QuizPage({ quizWords, onComplete }) {
           exampleIndex >= kanjiStartIndex && exampleIndex < kanjiEndIndex
         const isInHiraganaTarget = hiraganaStartIndex !== -1 &&
           exampleIndex >= hiraganaStartIndex && exampleIndex < hiraganaEndIndex
-        
+
         result.push(
           <span key={exampleIndex} className={isInKanjiTarget || isInHiraganaTarget ? 'highlighted-word' : ''}>
             {char}
@@ -394,7 +514,7 @@ function QuizPage({ quizWords, onComplete }) {
         exampleIndex++
       }
     }
-    
+
     return <>{result}</>
   }
 
@@ -422,16 +542,16 @@ function QuizPage({ quizWords, onComplete }) {
   // exampleRuby: [{ '青': 'あお' }, { '空': 'そら' }] 형태 사용
   const getExampleWithBlank = (example, kanji, exampleRuby, hiragana) => {
     if (!example) return null
-    
+
     const result = []
     let exampleIndex = 0
-    
+
     const hasKanji = kanji && kanji.length > 0
     const kanjiIndex = hasKanji ? example.indexOf(kanji) : -1
     const hiraganaIndexInExample = !hasKanji && hiragana && hiragana.length > 0
       ? example.indexOf(hiragana)
       : -1
-    
+
     // exampleRuby 배열을 맵으로 변환하여 빠른 검색 가능하게 함
     const rubyMap = new Map()
     if (Array.isArray(exampleRuby)) {
@@ -441,7 +561,7 @@ function QuizPage({ quizWords, onComplete }) {
         })
       })
     }
-    
+
     while (exampleIndex < example.length) {
       // 정답 단어 위치인지 확인
       if (hasKanji && exampleIndex === kanjiIndex && kanjiIndex !== -1) {
@@ -449,18 +569,18 @@ function QuizPage({ quizWords, onComplete }) {
         exampleIndex += kanji.length
         continue
       }
-      
+
       if (!hasKanji && exampleIndex === hiraganaIndexInExample && hiraganaIndexInExample !== -1 && hiragana && hiragana.length > 0) {
         result.push(<span key={exampleIndex} className="blank">____</span>)
         exampleIndex += hiragana.length
         continue
       }
-      
+
       let matched = false
-      
+
       // exampleRuby에서 가장 긴 한자부터 매칭 시도 (긴 한자가 우선)
       const sortedRubyEntries = Array.from(rubyMap.entries()).sort((a, b) => b[0].length - a[0].length)
-      
+
       for (const [kanjiText, hiraganaText] of sortedRubyEntries) {
         if (example.substring(exampleIndex).startsWith(kanjiText)) {
           // 루비 태그 추가
@@ -470,13 +590,13 @@ function QuizPage({ quizWords, onComplete }) {
               <rt>{hiraganaText}</rt>
             </ruby>
           )
-          
+
           exampleIndex += kanjiText.length
           matched = true
           break
         }
       }
-      
+
       if (!matched) {
         // 한자가 아닌 문자 처리
         const char = example[exampleIndex]
@@ -484,7 +604,7 @@ function QuizPage({ quizWords, onComplete }) {
         exampleIndex++
       }
     }
-    
+
     return <>{result}</>
   }
 
@@ -541,34 +661,66 @@ function QuizPage({ quizWords, onComplete }) {
           <div className="example-korean">{currentQuiz.exampleKorean}</div>
         </div>
 
-        <div className="options-container">
-          {options.map((option, index) => {
-            const isCorrect = option.romaji === currentQuiz.romaji
-            const isWrong = wrongAnswers.includes(option.romaji)
-            const isSelected = hasAnswered && selectedAnswer === option.romaji
+        <div className="options-section">
+          {hasAnswered && showOptionHint && (
+            <div className="option-hint-bubble">
+              <span>💡 정답 외 보기를 누르면 뜻이 나와요</span>
+              <button
+                className="option-hint-close"
+                onClick={() => {
+                  localStorage.setItem('mogumogu_option_hint_dismissed', 'true')
+                  setShowOptionHint(false)
+                }}
+                aria-label="닫기"
+              >
+                ×
+              </button>
+            </div>
+          )}
+          <div className="options-container">
+            {options.map((option, index) => {
+              const isCorrect = option.romaji === currentQuiz.romaji
+              const isWrong = wrongAnswers.includes(option.romaji)
+              const isSelected = hasAnswered && selectedAnswer === option.romaji
+              const isOptionSelected = hasAnswered && selectedOptionWord?.romaji === option.romaji && !isCorrect
 
-            let buttonClass = 'option-button'
-            if (hasAnswered) {
-              if (isCorrect) {
-                buttonClass += ' correct'
+              let buttonClass = 'option-button'
+              if (hasAnswered) {
+                if (isCorrect) {
+                  buttonClass += ' correct'
+                } else if (isWrong) {
+                  buttonClass += ' incorrect'
+                }
               } else if (isWrong) {
                 buttonClass += ' incorrect'
               }
-            } else if (isWrong) {
-              buttonClass += ' incorrect'
-            }
 
-            return (
-              <button
-                key={`${option.romaji}-${index}`}
-                onClick={() => handleAnswerSelect(option)}
-                disabled={hasAnswered}
-                className={buttonClass}
-              >
-                {option.hiragana}
-              </button>
-            )
-          })}
+              return (
+                <div
+                  key={`${option.romaji}-${index}`}
+                  className={`option-wrapper ${isOptionSelected ? 'flipped' : ''}`}
+                >
+                  <div className="option-card-inner">
+                    <div className="option-card-front">
+                      <button
+                        onClick={() => handleAnswerSelect(option)}
+                        className={buttonClass}
+                      >
+                        {option.hiragana}
+                      </button>
+                    </div>
+                    <div className="option-card-back">
+                      <div className="option-word-info-content">
+                        {option.kanji && <div className="option-word-kanji">{option.kanji}</div>}
+                        <div className="option-word-hiragana">{option.hiragana}</div>
+                        <div className="option-word-korean">{option.korean}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         <div className="button-group">

@@ -107,23 +107,36 @@ const getInitialMasteryData = () => ({
   nextReviewTime: Date.now() // 다음 복습 시간
 })
 
+// 단어 고유 키 생성 (kanji가 있으면 kanji, 없으면 hiragana 사용)
+// 같은 발음(romaji)을 가진 단어들을 구분하기 위함
+const getWordKey = (word) => {
+  if (typeof word === 'string') {
+    // 호환성을 위해 문자열(romaji)도 받을 수 있지만, 이는 권장되지 않음
+    return word
+  }
+  // kanji가 있으면 kanji를, 없으면 hiragana를 키로 사용
+  return word.kanji || word.hiragana || word.romaji
+}
+
 // 단어별 복습 데이터 가져오기
-export const getWordMasteryData = (romaji) => {
+export const getWordMasteryData = (word) => {
+  const wordKey = getWordKey(word)
   const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
-  return allMasteryData[romaji] || getInitialMasteryData()
+  return allMasteryData[wordKey] || getInitialMasteryData()
 }
 
 // 단어별 복습 데이터 저장
-export const saveWordMasteryData = (romaji, masteryData) => {
+export const saveWordMasteryData = (word, masteryData) => {
+  const wordKey = getWordKey(word)
   const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
-  allMasteryData[romaji] = masteryData
+  allMasteryData[wordKey] = masteryData
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allMasteryData))
 }
 
 // 정답 패턴에 따른 복습 간격 업데이트
-export const updateMasteryOnAnswer = (romaji, answerType, answerTime = null) => {
+export const updateMasteryOnAnswer = (word, answerType, answerTime = null) => {
   // answerType: 'quick' (5초 이내), 'moderate' (5~10초), 'slow' (10초 이후), 'wrong' (오답/모르겠음)
-  const masteryData = getWordMasteryData(romaji)
+  const masteryData = getWordMasteryData(word)
   const now = Date.now()
   const isNewWord = masteryData.currentInterval === null
 
@@ -190,31 +203,31 @@ export const updateMasteryOnAnswer = (romaji, answerType, answerTime = null) => 
   masteryData.nextReviewTime = now + nextIntervalValue
 
   // 저장
-  saveWordMasteryData(romaji, masteryData)
+  saveWordMasteryData(word, masteryData)
 
   return masteryData
 }
 
 // 복습 대상 단어인지 확인 (다음 복습 시간이 지났는지)
-export const isWordDueForReview = (romaji) => {
-  const masteryData = getWordMasteryData(romaji)
+export const isWordDueForReview = (word) => {
+  const masteryData = getWordMasteryData(word)
   return Date.now() >= masteryData.nextReviewTime
 }
 
 // 복습 대상 단어 목록 가져오기
 export const getWordsDueForReview = (vocabulary) => {
-  return vocabulary.filter(word => isWordDueForReview(word.romaji))
+  return vocabulary.filter(word => isWordDueForReview(word))
 }
 
 // 새 단어인지 확인 (currentInterval이 null인 경우)
-export const isNewWord = (romaji) => {
-  const masteryData = getWordMasteryData(romaji)
+export const isNewWord = (word) => {
+  const masteryData = getWordMasteryData(word)
   return masteryData.currentInterval === null
 }
 
 // 완전히 숙달된 단어인지 확인 (extreme 3달 간격에 도달한 경우)
-export const isWordMastered = (romaji) => {
-  const masteryData = getWordMasteryData(romaji)
+export const isWordMastered = (word) => {
+  const masteryData = getWordMasteryData(word)
   return masteryData.currentInterval === INTERVAL_TYPE.EXTREME
 }
 
@@ -225,14 +238,16 @@ export const selectQuizWords = (vocabulary, totalCount = 10) => {
 
   // 복습 대상 단어 (이미 학습한 단어 중 다음 복습 시간이 지난 단어)
   const dueWords = vocabulary.filter(word => {
-    const masteryData = allMasteryData[word.romaji] || getInitialMasteryData()
+    const wordKey = getWordKey(word)
+    const masteryData = allMasteryData[wordKey] || getInitialMasteryData()
     // 새 단어(currentInterval === null)는 복습 대상이 될 수 없음
     return masteryData.currentInterval !== null && now >= masteryData.nextReviewTime
   })
 
   // 새 단어 (currentInterval이 null인 단어)
   const newWords = vocabulary.filter(word => {
-    const masteryData = allMasteryData[word.romaji] || getInitialMasteryData()
+    const wordKey = getWordKey(word)
+    const masteryData = allMasteryData[wordKey] || getInitialMasteryData()
     return masteryData.currentInterval === null
   })
 
@@ -262,8 +277,10 @@ export const selectQuizWords = (vocabulary, totalCount = 10) => {
   // 복습 단어 선택 (우선순위: 오래된 복습 시간 순)
   if (availableDueWords.length > 0 && reviewWordCount > 0) {
     const sortedDueWords = availableDueWords.sort((a, b) => {
-      const masteryA = allMasteryData[a.romaji] || getInitialMasteryData()
-      const masteryB = allMasteryData[b.romaji] || getInitialMasteryData()
+      const wordKeyA = getWordKey(a)
+      const wordKeyB = getWordKey(b)
+      const masteryA = allMasteryData[wordKeyA] || getInitialMasteryData()
+      const masteryB = allMasteryData[wordKeyB] || getInitialMasteryData()
       return masteryA.nextReviewTime - masteryB.nextReviewTime
     })
     selectedWords.push(...sortedDueWords.slice(0, reviewWordCount))
@@ -271,8 +288,8 @@ export const selectQuizWords = (vocabulary, totalCount = 10) => {
 
   // 부족한 경우 새 단어로 채우기
   if (selectedWords.length < totalCount && availableNewWords.length > 0) {
-    const alreadySelectedRomaji = new Set(selectedWords.map(w => w.romaji))
-    const filteredNewWords = availableNewWords.filter(w => !alreadySelectedRomaji.has(w.romaji))
+    const alreadySelectedKeys = new Set(selectedWords.map(w => getWordKey(w)))
+    const filteredNewWords = availableNewWords.filter(w => !alreadySelectedKeys.has(getWordKey(w)))
     const shuffledAdditional = shuffleArray(filteredNewWords)
     selectedWords.push(...shuffledAdditional.slice(0, totalCount - selectedWords.length))
   }
@@ -345,7 +362,7 @@ export const groupWordsByInterval = (words) => {
   }
 
   words.forEach(word => {
-    const masteryData = getWordMasteryData(word.romaji)
+    const masteryData = getWordMasteryData(word)
     const intervalType = masteryData.currentInterval
     if (intervalType !== null && groups[intervalType] !== undefined) {
       groups[intervalType].push(word)

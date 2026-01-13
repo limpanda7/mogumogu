@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { vocabulary } from './vocabulary'
 import { getAllWordsByInterval } from './spacedRepetition'
+import { synthesizeSpeech } from './firebase'
 
 function CompletedWordsPage({ onBack }) {
   const [intervalGroups, setIntervalGroups] = useState([])
@@ -28,7 +29,75 @@ function CompletedWordsPage({ onBack }) {
     }
   }, [])
 
-  const speakText = (text) => {
+  const speakText = async (text) => {
+    if (!text) return
+
+    try {
+      // 기존 재생 중지
+      if (speechSynthesisHandlerRef.current?.audio) {
+        speechSynthesisHandlerRef.current.audio.pause()
+        speechSynthesisHandlerRef.current.audio = null
+      }
+
+      // 텍스트가 비어있지 않은지 확인
+      const textToSpeak = text.trim()
+      if (!textToSpeak) return
+
+      // Google Cloud TTS API 호출
+      const result = await synthesizeSpeech({
+        text: textToSpeak,
+        languageCode: 'ja-JP',
+        voiceName: 'ja-JP-Neural2-B' // 일본어 여성 음성 (A, B: 여성 / C, D: 남성)
+      })
+
+      // Base64 디코딩
+      const audioContent = result.data.audioContent
+      const audioBlob = new Blob([
+        Uint8Array.from(atob(audioContent), c => c.charCodeAt(0))
+      ], { type: 'audio/mp3' })
+
+      // 오디오 재생
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const audio = new Audio(audioUrl)
+
+      // 재생 완료 시 리소스 정리
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl)
+        if (speechSynthesisHandlerRef.current) {
+          speechSynthesisHandlerRef.current.audio = null
+        }
+      }
+
+      audio.onerror = (error) => {
+        console.error('오디오 재생 오류:', error)
+        URL.revokeObjectURL(audioUrl)
+        if (speechSynthesisHandlerRef.current) {
+          speechSynthesisHandlerRef.current.audio = null
+        }
+        // 오류 발생 시 기존 Web Speech API로 폴백
+        fallbackToWebSpeech(textToSpeak)
+      }
+
+      // 현재 재생 중인 오디오 저장
+      speechSynthesisHandlerRef.current = { audio }
+
+      // 오디오 재생 (Promise 처리)
+      try {
+        await audio.play()
+      } catch (playError) {
+        console.error('오디오 재생 시작 오류:', playError)
+        // 재생 실패 시 Web Speech API로 폴백
+        fallbackToWebSpeech(textToSpeak)
+      }
+    } catch (error) {
+      console.error('TTS API 호출 오류:', error)
+      // 오류 발생 시 기존 Web Speech API로 폴백
+      fallbackToWebSpeech(text.trim())
+    }
+  }
+
+  // Web Speech API 폴백 함수
+  const fallbackToWebSpeech = (text) => {
     if ('speechSynthesis' in window && text) {
       // 기존 재생 중지 및 이전 핸들러 제거
       window.speechSynthesis.cancel()
@@ -56,13 +125,12 @@ function CompletedWordsPage({ onBack }) {
       }
 
       // 음성 품질 개선 설정
-      utterance.rate = 0.85  // 약간 빠른 속도로 자연스럽게
-      utterance.pitch = 1.0   // 기본 피치
-      utterance.volume = 1.0  // 최대 볼륨
+      utterance.rate = 0.85
+      utterance.pitch = 1.0
+      utterance.volume = 1.0
 
-      // 에러 핸들러 추가 (무한 호출 방지)
+      // 에러 핸들러 추가
       utterance.onerror = () => {
-        // 에러 발생 시 재시도하지 않음
         if (speechSynthesisHandlerRef.current) {
           window.speechSynthesis.removeEventListener('voiceschanged', speechSynthesisHandlerRef.current)
           speechSynthesisHandlerRef.current = null
@@ -79,7 +147,6 @@ function CompletedWordsPage({ onBack }) {
 
       // 음성이 로드되지 않았을 경우 대기
       if (voices.length === 0) {
-        // 한 번만 실행되도록 핸들러 사용
         const voicesChangedHandler = () => {
           const updatedVoices = window.speechSynthesis.getVoices()
           if (updatedVoices.length > 0) {
@@ -96,7 +163,6 @@ function CompletedWordsPage({ onBack }) {
               utterance.voice = updatedJapaneseVoice
             }
             window.speechSynthesis.speak(utterance)
-            // 핸들러 제거 (한 번만 실행)
             if (speechSynthesisHandlerRef.current) {
               window.speechSynthesis.removeEventListener('voiceschanged', speechSynthesisHandlerRef.current)
               speechSynthesisHandlerRef.current = null
