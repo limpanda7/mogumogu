@@ -1037,6 +1037,10 @@ button {
   padding: 15px 0;
 }
 
+.settings-item-simple:last-child {
+  padding-bottom: 0;
+}
+
 .settings-label {
   font-size: 16px;
   font-weight: 600;
@@ -1055,7 +1059,6 @@ button {
 .quiz-count-button-plus {
   width: 40px;
   height: 40px;
-  border: 2px solid #ff8c42;
   border-radius: 50%;
   background: white;
   color: #ff8c42;
@@ -1068,14 +1071,6 @@ button {
   justify-content: center;
   line-height: 1;
   flex-shrink: 0;
-}
-
-.quiz-count-button-minus:hover:not(:disabled),
-.quiz-count-button-plus:hover {
-  background: linear-gradient(135deg, #ffd89b 0%, #ff9a56 100%);
-  color: white;
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(255, 156, 86, 0.4);
 }
 
 .quiz-count-button-minus:disabled {
