@@ -14,7 +14,7 @@ export const animations = [
         partOfSpeech: 'noun',
         example: '左手は そえるだけ',
         exampleRuby: [{ '左手': 'ひだりて' }, { '添': 'そ' }],
-        exampleKorean: '왼손은 거들 뿐.',
+        exampleKorean: '왼손은 거들 뿐',
         exampleHiragana: 'ひだりては そえるだけ'
       },
       {
@@ -62,7 +62,7 @@ export const animations = [
         partOfSpeech: 'noun',
         example: 'あきらめの悪い男',
         exampleRuby: [{ '悪': 'わる' }, { '男': 'おとこ' }],
-        exampleKorean: '포기를 모르는 남자지.',
+        exampleKorean: '포기를 모르는 남자지',
         exampleHiragana: 'あきらめのわるいおとこ'
       }
     ]
