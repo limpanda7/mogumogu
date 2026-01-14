@@ -1210,14 +1210,21 @@ button {
   gap: 8px;
 }
 
-.animation-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+.animation-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .animation-name-japanese {
-  font-size: 14px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #666;
+}
+
+.animation-name {
+  font-size: 16px;
+  font-weight: 500;
   color: #666;
 }
 
