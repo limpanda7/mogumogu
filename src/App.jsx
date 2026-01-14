@@ -5,6 +5,8 @@ import QuizPage from './QuizPage'
 import CompletedWordsPage from './CompletedWordsPage'
 import ResultPage from './ResultPage'
 import SettingsPage from './SettingsPage'
+import AnimationSelectPage from './AnimationSelectPage'
+import AnimationQuizPage from './AnimationQuizPage'
 import { selectQuizWords } from './spacedRepetition'
 
 // localStorage 키
@@ -17,8 +19,11 @@ function App() {
   const [showCompletedWords, setShowCompletedWords] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showAnimationSelect, setShowAnimationSelect] = useState(false)
+  const [showAnimationQuiz, setShowAnimationQuiz] = useState(false)
   const [quizWords, setQuizWords] = useState([])
   const [resultQuizWords, setResultQuizWords] = useState([])
+  const [selectedAnimation, setSelectedAnimation] = useState(null)
   
   // 로컬스토리지에서 문제 수 가져오기
   const getQuizCount = () => {
@@ -103,6 +108,25 @@ function App() {
     setShowSettings(false)
   }
 
+  const handleShowAnimationSelect = () => {
+    setShowAnimationSelect(true)
+  }
+
+  const handleBackFromAnimationSelect = () => {
+    setShowAnimationSelect(false)
+  }
+
+  const handleSelectAnimation = (animation) => {
+    setSelectedAnimation(animation)
+    setShowAnimationSelect(false)
+    setShowAnimationQuiz(true)
+  }
+
+  const handleAnimationQuizComplete = () => {
+    setShowAnimationQuiz(false)
+    setSelectedAnimation(null)
+  }
+
   if (showQuiz) {
     return <QuizPage quizWords={quizWords} onComplete={handleQuizComplete} />
   }
@@ -117,6 +141,18 @@ function App() {
 
   if (showSettings) {
     return <SettingsPage onBack={handleBackFromSettings} />
+  }
+
+  if (showAnimationSelect) {
+    return <AnimationSelectPage onBack={handleBackFromAnimationSelect} onSelectAnimation={handleSelectAnimation} />
+  }
+
+  if (showAnimationQuiz && selectedAnimation) {
+    return <AnimationQuizPage 
+      animationWords={selectedAnimation.words} 
+      animationName={selectedAnimation.name}
+      onComplete={handleAnimationQuizComplete} 
+    />
   }
 
   return (
@@ -140,6 +176,9 @@ function App() {
               공부한 단어
             </button>
           </div>
+          <button onClick={handleShowAnimationSelect} className="animation-button" style={{ marginTop: '10px' }}>
+            🎬 애니메이션 대사 학습
+          </button>
           <button onClick={handleShowSettings} className="settings-button-bottom">
             ⚙️ 설정
           </button>
