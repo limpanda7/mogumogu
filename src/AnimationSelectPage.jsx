@@ -28,8 +28,8 @@ function AnimationSelectPage({ onBack, onSelectAnimation }) {
               >
                 <div className="animation-card-content">
                   <div className="animation-name-row">
-                    <div className="animation-name-japanese">{animation.nameJapanese}</div>
                     <div className="animation-name">{animation.name}</div>
+                    <div className="animation-name-japanese">{animation.nameJapanese}</div>
                   </div>
                   <div className="animation-word-count">
                     {animation.words.length}개 단어

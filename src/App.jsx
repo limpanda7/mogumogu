@@ -151,6 +151,7 @@ function App() {
     return <AnimationQuizPage 
       animationWords={selectedAnimation.words} 
       animationName={selectedAnimation.name}
+      animationNameJapanese={selectedAnimation.nameJapanese}
       onComplete={handleAnimationQuizComplete} 
     />
   }

@@ -1977,7 +1977,7 @@ export const vocabulary = [
     english: 'Slippers',
     partOfSpeech: 'noun',
     example: 'スリッパを履く',
-    exampleRuby: [],
+    exampleRuby: [{ '履': 'は' }],
     exampleKorean: '슬리퍼를 신다'
   },
   {
@@ -2020,9 +2020,9 @@ export const vocabulary = [
     korean: '학생',
     english: 'Pupil',
     partOfSpeech: 'noun',
-    example: '生徒が勉強する',
-    exampleRuby: [{ 生徒: 'せいと' }, { 勉強: 'べんきょう' }],
-    exampleKorean: '학생이 공부하다'
+    example: '生徒が教室に入る',
+    exampleRuby: [{ 生徒: 'せいと' }, { 教室: 'きょうしつ' }, { 入: 'はい' }],
+    exampleKorean: '학생이 교실에 들어가다'
   },
   {
     kanji: '',

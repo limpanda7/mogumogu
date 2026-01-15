@@ -12,7 +12,7 @@ function QuizPage({ quizWords, onComplete }) {
   const [wrongAnswers, setWrongAnswers] = useState([])
   const [hasAnswered, setHasAnswered] = useState(false)
   const [reviewTimeMessage, setReviewTimeMessage] = useState('')
-  const [selectedOptionWord, setSelectedOptionWord] = useState(null) // 정답 화면에서 클릭한 보기 단어
+  const [flippedOptions, setFlippedOptions] = useState(new Set()) // 정답 화면에서 뒤집힌 보기들
   // 보기 힌트 말풍선 표시 여부 - 초기값은 로컬스토리지 확인 결과
   const [showOptionHint, setShowOptionHint] = useState(() => {
     const hintDismissed = localStorage.getItem('mogumogu_option_hint_dismissed')
@@ -123,7 +123,7 @@ function QuizPage({ quizWords, onComplete }) {
       setWrongAnswers([])
       setHasAnswered(false)
       setReviewTimeMessage('')
-      setSelectedOptionWord(null) // 선택된 보기 단어 초기화
+      setFlippedOptions(new Set()) // 뒤집힌 보기들 초기화
       questionStartTimeRef.current = Date.now() // 문제 시작 시간 초기화
     }
 
@@ -148,15 +148,15 @@ function QuizPage({ quizWords, onComplete }) {
     if (hasAnswered) {
       const isCorrect = option.romaji === currentQuiz.romaji
       if (!isCorrect) {
-        // 정답이 아닌 보기를 클릭하면 단어 정보 표시
-        const wasSelected = selectedOptionWord?.romaji === option.romaji
-        setSelectedOptionWord(wasSelected ? null : option)
-        
-        // 카드를 뒤집을 때만 발음 재생 (이미 뒤집혀 있으면 재생하지 않음)
-        if (!wasSelected) {
-          // 히라가나로 발음 재생
-          speakText(option.hiragana)
+        // 정답이 아닌 보기를 클릭하면 단어 정보 표시 (뒤집힌 상태 유지)
+        const isFlipped = flippedOptions.has(option.romaji)
+        if (!isFlipped) {
+          // 아직 뒤집히지 않은 경우에만 뒤집기
+          setFlippedOptions(prev => new Set([...prev, option.romaji]))
         }
+        
+        // 뒤집힌 상태에서 클릭해도 발음 재생
+        speakText(option.hiragana)
       }
       return
     }
@@ -682,15 +682,14 @@ function QuizPage({ quizWords, onComplete }) {
               const isCorrect = option.romaji === currentQuiz.romaji
               const isWrong = wrongAnswers.includes(option.romaji)
               const isSelected = hasAnswered && selectedAnswer === option.romaji
-              const isOptionSelected = hasAnswered && selectedOptionWord?.romaji === option.romaji && !isCorrect
+              const isFlipped = hasAnswered && flippedOptions.has(option.romaji) && !isCorrect
 
               let buttonClass = 'option-button'
               if (hasAnswered) {
                 if (isCorrect) {
                   buttonClass += ' correct'
-                } else if (isWrong) {
-                  buttonClass += ' incorrect'
                 }
+                // 정답 화면에서는 오답 표시 제거
               } else if (isWrong) {
                 buttonClass += ' incorrect'
               }
@@ -698,7 +697,7 @@ function QuizPage({ quizWords, onComplete }) {
               return (
                 <div
                   key={`${option.romaji}-${index}`}
-                  className={`option-wrapper ${isOptionSelected ? 'flipped' : ''}`}
+                  className={`option-wrapper ${isFlipped ? 'flipped' : ''}`}
                 >
                   <div className="option-card-inner">
                     <div className="option-card-front">
@@ -709,7 +708,7 @@ function QuizPage({ quizWords, onComplete }) {
                         {option.hiragana}
                       </button>
                     </div>
-                    <div className="option-card-back">
+                    <div className="option-card-back" onClick={() => hasAnswered && !isCorrect && speakText(option.hiragana)} style={{ cursor: hasAnswered && !isCorrect ? 'pointer' : 'default' }}>
                       <div className="option-word-info-content">
                         {option.kanji && <div className="option-word-kanji">{option.kanji}</div>}
                         <div className="option-word-hiragana">{option.hiragana}</div>
