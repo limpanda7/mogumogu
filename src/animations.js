@@ -12,7 +12,7 @@ export const animations = [
         korean: '왼손',
         english: 'left hand',
         partOfSpeech: 'noun',
-        example: '左手は そえるだけ',
+        example: '左手は 添えるだけ',
         exampleRuby: [{ '左手': 'ひだりて' }, { '添': 'そ' }],
         exampleKorean: '왼손은 거들 뿐',
         exampleHiragana: 'ひだりては そえるだけ'
@@ -96,7 +96,7 @@ export const animations = [
         korean: '곁들이다, 거들다',
         english: 'to accompany',
         partOfSpeech: 'verb',
-        example: '左手は そえるだけ',
+        example: '左手は 添えるだけ',
         exampleRuby: [{ '左手': 'ひだりて' }, { '添': 'そ' }],
         exampleKorean: '왼손은 거들 뿐',
         exampleHiragana: 'ひだりては そえるだけ'
@@ -155,18 +155,6 @@ export const animations = [
         exampleRuby: [{ '君': 'きみ' }, { '助': 'たす' }, { '求': 'もと' }, { '顔': 'かお' }],
         exampleKorean: '네가 도움을 구하는 얼굴을 했어',
         exampleHiragana: 'きみがたすけをもとめるかおしてた'
-      },
-      {
-        kanji: '活動',
-        hiragana: 'かつどう',
-        romaji: 'katsudo',
-        korean: '활동',
-        english: 'activity',
-        partOfSpeech: 'noun',
-        example: 'ヒーローってのは本来奉仕活動',
-        exampleRuby: [{ '本来': 'ほんらい' }, { '奉仕': 'ほうし' }, { '活動': 'かつどう' }],
-        exampleKorean: '히어로라는 것은 원래 봉사활동이다',
-        exampleHiragana: 'ひーろーってのはほんらいほうしかつどう'
       }
     ]
   },
