@@ -320,17 +320,6 @@ export const vocabulary = [
     exampleKorean: '아파트에 살다'
   },
   {
-    kanji: '浴びる',
-    hiragana: 'あびる',
-    romaji: 'abiru',
-    korean: '목욕하다',
-    english: 'to bathe, to shower',
-    partOfSpeech: 'verb',
-    example: 'シャワーを浴びる',
-    exampleRuby: [{ 浴: 'あ' }],
-    exampleKorean: '샤워를 하다'
-  },
-  {
     kanji: '危ない',
     hiragana: 'あぶない',
     romaji: 'abunai',
@@ -340,6 +329,17 @@ export const vocabulary = [
     example: '危ない道',
     exampleRuby: [{ 危: 'あぶ' }, { 道: 'みち' }],
     exampleKorean: '위험한 길'
+  },
+  {
+    kanji: '浴びる',
+    hiragana: 'あびる',
+    romaji: 'abiru',
+    korean: '목욕하다',
+    english: 'to bathe, to shower',
+    partOfSpeech: 'verb',
+    example: 'シャワーを浴びる',
+    exampleRuby: [{ 浴: 'あ' }],
+    exampleKorean: '샤워를 하다'
   },
   {
     kanji: '甘い',
@@ -672,17 +672,6 @@ export const vocabulary = [
     exampleKorean: '지금 몇 시입니까'
   },
   {
-    kanji: '意味',
-    hiragana: 'いみ',
-    romaji: 'imi',
-    korean: '의미',
-    english: 'meaning',
-    partOfSpeech: 'noun',
-    example: '言葉の意味',
-    exampleRuby: [{ 言葉: 'ことば' }, { 意味: 'いみ' }],
-    exampleKorean: '단어의 의미'
-  },
-  {
     kanji: '妹',
     hiragana: 'いもうと',
     romaji: 'imouto',
@@ -791,17 +780,6 @@ export const vocabulary = [
     example: '後ろを見る',
     exampleRuby: [{ 後: 'うし' }, { 見: 'み' }],
     exampleKorean: '뒤를 보다'
-  },
-  {
-    kanji: '薄い',
-    hiragana: 'うすい',
-    romaji: 'usui',
-    korean: '얇은',
-    english: 'thin, weak',
-    partOfSpeech: 'adjective',
-    example: '薄い紙',
-    exampleRuby: [{ 薄: 'うす' }, { 紙: 'かみ' }],
-    exampleKorean: '얇은 종이'
   },
   {
     kanji: '歌',
@@ -942,9 +920,9 @@ export const vocabulary = [
     korean: '역',
     english: 'station',
     partOfSpeech: 'noun',
-    example: '薬を飲む',
-    exampleRuby: [{ 薬: 'くすり' }, { 飲: 'の' }],
-    exampleKorean: '약을 먹다'
+    example: '駅に行く',
+    exampleRuby: [{ 駅: 'えき' }, { 行: 'い' }],
+    exampleKorean: '역에 가다'
   },
   {
     kanji: '果物',
@@ -1035,17 +1013,6 @@ export const vocabulary = [
     exampleKorean: '검은 옷'
   },
   {
-    kanji: '警察',
-    hiragana: 'けいさつ',
-    romaji: 'keisatsu',
-    korean: '경찰',
-    english: 'policeman',
-    partOfSpeech: 'noun',
-    example: '警察に聞く',
-    exampleRuby: [{ 警察: 'けいさつ' }, { 聞: 'き' }],
-    exampleKorean: '경찰에게 물어보다'
-  },
-  {
     kanji: '今朝',
     hiragana: 'けさ',
     romaji: 'kesa',
@@ -1074,9 +1041,9 @@ export const vocabulary = [
     korean: '결혼',
     english: 'Marriage',
     partOfSpeech: 'noun',
-    example: '結婚する',
+    example: '結婚したい',
     exampleRuby: [{ 結婚: 'けっこん' }],
-    exampleKorean: '결혼하다'
+    exampleKorean: '결혼하고 싶다'
   },
   {
     kanji: '月曜日',
@@ -1123,17 +1090,6 @@ export const vocabulary = [
     exampleKorean: '공원에서 놀다'
   },
   {
-    kanji: '交差点',
-    hiragana: 'こうさてん',
-    romaji: 'kousaten',
-    korean: '교차로',
-    english: 'intersection',
-    partOfSpeech: 'noun',
-    example: '交差点を渡る',
-    exampleRuby: [{ 交差点: 'こうさてん' }, { 渡: 'わた' }],
-    exampleKorean: '교차로를 건너다'
-  },
-  {
     kanji: '紅茶',
     hiragana: 'こうちゃ',
     romaji: 'koucha',
@@ -1143,17 +1099,6 @@ export const vocabulary = [
     example: '紅茶を飲む',
     exampleRuby: [{ 紅茶: 'こうちゃ' }, { 飲: 'の' }],
     exampleKorean: '홍차를 마시다'
-  },
-  {
-    kanji: '交番',
-    hiragana: 'こうばん',
-    romaji: 'kouban',
-    korean: '파출소',
-    english: 'police box',
-    partOfSpeech: 'noun',
-    example: '交番で道を聞く',
-    exampleRuby: [{ 交番: 'こうばん' }, { 道: 'みち' }, { 聞: 'き' }],
-    exampleKorean: '파출소에서 길을 물어보다'
   },
   {
     kanji: '声',
@@ -1310,26 +1255,15 @@ export const vocabulary = [
     exampleKorean: '밥을 먹다'
   },
   {
-    kanji: '複写する',
-    hiragana: 'ふくしゃする',
-    romaji: 'fukushasuru',
-    korean: '복사하다',
-    english: 'to copy',
-    partOfSpeech: 'verb',
-    example: '書類を複写する',
-    exampleRuby: [{ 書類: 'しょるい' }, { 複写: 'ふくしゃ' }],
-    exampleKorean: '서류를 복사하다'
-  },
-  {
     kanji: '困る',
     hiragana: 'こまる',
     romaji: 'komaru',
     korean: '곤란하다',
-    english: 'to be worried',
+    english: 'to be troubled',
     partOfSpeech: 'verb',
-    example: '困った問題',
-    exampleRuby: [{ 困: 'こま' }, { 問題: 'もんだい' }],
-    exampleKorean: '곤란한 문제'
+    example: 'お金がなくて困っています',
+    exampleRuby: [{ 金: 'かね' }, { 困: 'こま' }],
+    exampleKorean: '돈이 없어서 곤란하다'
   },
   {
     kanji: '',
@@ -1409,39 +1343,6 @@ export const vocabulary = [
     exampleKorean: '앞을 보다'
   },
   {
-    kanji: '咲く',
-    hiragana: 'さく',
-    romaji: 'saku',
-    korean: '피다',
-    english: 'to bloom',
-    partOfSpeech: 'verb',
-    example: '花が咲く',
-    exampleRuby: [{ 花: 'はな' }, { 咲: 'さ' }],
-    exampleKorean: '꽃이 피다'
-  },
-  {
-    kanji: '作文',
-    hiragana: 'さくぶん',
-    romaji: 'sakubun',
-    korean: '작문',
-    english: 'composition, writing',
-    partOfSpeech: 'noun',
-    example: '作文を書く',
-    exampleRuby: [{ 作文: 'さくぶん' }, { 書: 'か' }],
-    exampleKorean: '작문을 쓰다'
-  },
-  {
-    kanji: '指す',
-    hiragana: 'さす',
-    romaji: 'sasu',
-    korean: '가리다',
-    english: 'to point, to indicate',
-    partOfSpeech: 'verb',
-    example: '方向を指す',
-    exampleRuby: [{ 方向: 'ほうこう' }, { 指: 'さ' }],
-    exampleKorean: '방향을 가리키다'
-  },
-  {
     kanji: '雑誌',
     hiragana: 'ざっし',
     romaji: 'zasshi',
@@ -1495,17 +1396,6 @@ export const vocabulary = [
     example: '三つのりんご',
     exampleRuby: [{ 三: 'みっ' }],
     exampleKorean: '세 개의 사과'
-  },
-  {
-    kanji: '散策する',
-    hiragana: 'さんさくする',
-    romaji: 'sansakusuru',
-    korean: '산책하다',
-    english: 'to stroll',
-    partOfSpeech: 'verb',
-    example: '公園を散策する',
-    exampleRuby: [{ 公園: 'こうえん' }, { 散策: 'さんさく' }],
-    exampleKorean: '공원을 산책하다'
   },
   {
     kanji: '四つ',
@@ -1594,17 +1484,6 @@ export const vocabulary = [
     example: '机の下',
     exampleRuby: [{ 机: 'つくえ' }, { 下: 'した' }],
     exampleKorean: '책상 아래'
-  },
-  {
-    kanji: '質問',
-    hiragana: 'しつもん',
-    romaji: 'shitsumon',
-    korean: '질문',
-    english: 'Question',
-    partOfSpeech: 'noun',
-    example: '質問をする',
-    exampleRuby: [{ 質問: 'しつもん' }],
-    exampleKorean: '질문을 하다'
   },
   {
     kanji: '自転車',
@@ -1728,28 +1607,6 @@ export const vocabulary = [
     exampleKorean: '열 개의 사과'
   },
   {
-    kanji: '授業',
-    hiragana: 'じゅぎょう',
-    romaji: 'jugyou',
-    korean: '수업',
-    english: 'lesson, class work',
-    partOfSpeech: 'noun',
-    example: '授業を受ける',
-    exampleRuby: [{ 授業: 'じゅぎょう' }, { 受: 'う' }],
-    exampleKorean: '수업을 받다'
-  },
-  {
-    kanji: '宿題',
-    hiragana: 'しゅくだい',
-    romaji: 'shukudai',
-    korean: '숙제',
-    english: 'homework',
-    partOfSpeech: 'noun',
-    example: '宿題をする',
-    exampleRuby: [{ 宿題: 'しゅくだい' }],
-    exampleKorean: '숙제를 하다'
-  },
-  {
     kanji: '上手',
     hiragana: 'じょうず',
     romaji: 'jouzu',
@@ -1759,17 +1616,6 @@ export const vocabulary = [
     example: '上手に話す',
     exampleRuby: [{ 上手: 'じょうず' }, { 話: 'はな' }],
     exampleKorean: '잘 말하다'
-  },
-  {
-    kanji: '丈夫',
-    hiragana: 'じょうぶ',
-    romaji: 'joubu',
-    korean: '건강함',
-    english: 'strong, durable',
-    partOfSpeech: 'adjective',
-    example: '丈夫な体',
-    exampleRuby: [{ 丈夫: 'じょうぶ' }, { 体: 'からだ' }],
-    exampleKorean: '건강한 몸'
   },
   {
     kanji: '醤油',
@@ -1916,28 +1762,6 @@ export const vocabulary = [
   },
   {
     kanji: '',
-    hiragana: 'ストーブ',
-    romaji: 'sutobu',
-    korean: '스토브',
-    english: 'Heater',
-    partOfSpeech: 'noun',
-    example: 'ストーブをつける',
-    exampleRuby: [],
-    exampleKorean: '스토브를 켜다'
-  },
-  {
-    kanji: '',
-    hiragana: 'スプーン',
-    romaji: 'supoon',
-    korean: '숟가락',
-    english: 'Spoon',
-    partOfSpeech: 'noun',
-    example: 'スプーンで食べる',
-    exampleRuby: [{ 食: 'た' }],
-    exampleKorean: '숟가락으로 먹다'
-  },
-  {
-    kanji: '',
     hiragana: 'スポーツ',
     romaji: 'supootsu',
     korean: '스포츠',
@@ -1968,17 +1792,6 @@ export const vocabulary = [
     example: '東京に住む',
     exampleRuby: [{ 東京: 'とうきょう' }, { 住: 'す' }],
     exampleKorean: '도쿄에 살다'
-  },
-  {
-    kanji: '',
-    hiragana: 'スリッパ',
-    romaji: 'surippa',
-    korean: '슬리퍼',
-    english: 'Slippers',
-    partOfSpeech: 'noun',
-    example: 'スリッパを履く',
-    exampleRuby: [{ '履': 'は' }],
-    exampleKorean: '슬리퍼를 신다'
   },
   {
     kanji: '',
@@ -2014,17 +1827,6 @@ export const vocabulary = [
     exampleKorean: '키가 크다'
   },
   {
-    kanji: '生徒',
-    hiragana: 'せいと',
-    romaji: 'seito',
-    korean: '학생',
-    english: 'Pupil',
-    partOfSpeech: 'noun',
-    example: '生徒が教室に入る',
-    exampleRuby: [{ 生徒: 'せいと' }, { 教室: 'きょうしつ' }, { 入: 'はい' }],
-    exampleKorean: '학생이 교실에 들어가다'
-  },
-  {
     kanji: '',
     hiragana: 'セーター',
     romaji: 'seetaa',
@@ -2045,17 +1847,6 @@ export const vocabulary = [
     example: 'せっけんで手を洗う',
     exampleRuby: [{ 手: 'て' }, { 洗: 'あら' }],
     exampleKorean: '비누로 손을 씻다'
-  },
-  {
-    kanji: '背広',
-    hiragana: 'せびろ',
-    romaji: 'sebiro',
-    korean: '정장',
-    english: 'business suit',
-    partOfSpeech: 'noun',
-    example: '背広を着る',
-    exampleRuby: [{ 背広: 'せびろ' }, { 着: 'き' }],
-    exampleKorean: '정장을 입다'
   },
   {
     kanji: '狭い',
@@ -2124,48 +1915,15 @@ export const vocabulary = [
     exampleKorean: '선생님에게 물어보다'
   },
   {
-    kanji: '洗濯',
-    hiragana: 'せんたく',
-    romaji: 'sentaku',
-    korean: '세탁',
-    english: 'Washing',
-    partOfSpeech: 'noun',
-    example: '洗濯をする',
-    exampleRuby: [{ 洗濯: 'せんたく' }],
-    exampleKorean: '세탁을 하다'
-  },
-  {
-    kanji: '全部',
-    hiragana: 'ぜんぶ',
-    romaji: 'zenbu',
-    korean: '전체',
-    english: 'All',
-    partOfSpeech: 'noun',
-    example: '全部食べる',
-    exampleRuby: [{ 全部: 'ぜんぶ' }, { 食: 'た' }],
-    exampleKorean: '전부 먹다'
-  },
-  {
-    kanji: '掃除',
-    hiragana: 'そうじ',
-    romaji: 'souji',
-    korean: '청소',
-    english: 'cleaning',
-    partOfSpeech: 'noun',
-    example: '掃除をする',
-    exampleRuby: [{ 掃除: 'そうじ' }],
-    exampleKorean: '청소를 하다'
-  },
-  {
     kanji: '',
     hiragana: 'そうして',
     romaji: 'soushite',
     korean: '그리고',
     english: 'And',
     partOfSpeech: 'conjunction',
-    example: 'そうして行く',
-    exampleRuby: [{ 行: 'い' }],
-    exampleKorean: '그리고 가다'
+    example: 'そうして始まった',
+    exampleRuby: [{ 始: 'はじ' }],
+    exampleKorean: '그렇게 해서 시작되었다'
   },
   {
     kanji: '',
@@ -2262,9 +2020,9 @@ export const vocabulary = [
     korean: '그 다음에',
     english: 'after that',
     partOfSpeech: 'adverb',
-    example: 'それから行く',
-    exampleRuby: [{ 行: 'い' }],
-    exampleKorean: '그 다음에 가다'
+    example: '勉強しました。それから、寝ました。',
+    exampleRuby: [{ 勉強: 'べんきょう' }, { 寝: 'ね' }],
+    exampleKorean: '공부했습니다. 그리고 나서 잤습니다.'
   },
   {
     kanji: '大学',
@@ -2276,17 +2034,6 @@ export const vocabulary = [
     example: '大学に行く',
     exampleRuby: [{ 大学: 'だいがく' }, { 行: 'い' }],
     exampleKorean: '대학에 가다'
-  },
-  {
-    kanji: '大使館',
-    hiragana: 'たいしかん',
-    romaji: 'taishikan',
-    korean: '대사관',
-    english: 'embassy',
-    partOfSpeech: 'noun',
-    example: '大使館に行く',
-    exampleRuby: [{ 大使館: 'たいしかん' }, { 行: 'い' }],
-    exampleKorean: '대사관에 가다'
   },
   {
     kanji: '大丈夫',
@@ -2309,17 +2056,6 @@ export const vocabulary = [
     example: '大好きな人',
     exampleRuby: [{ 大好: 'だいす' }, { 人: 'ひと' }],
     exampleKorean: '매우 좋아하는 사람'
-  },
-  {
-    kanji: '大切',
-    hiragana: 'たいせつ',
-    romaji: 'taisetsu',
-    korean: '중요',
-    english: 'important',
-    partOfSpeech: 'adjective',
-    example: '大切なもの',
-    exampleRuby: [{ 大切: 'たいせつ' }, { 物: 'もの' }],
-    exampleKorean: '중요한 것'
   },
   {
     kanji: '台所',
@@ -2410,17 +2146,6 @@ export const vocabulary = [
     exampleKorean: '세로로 줄서다'
   },
   {
-    kanji: '建物',
-    hiragana: 'たてもの',
-    romaji: 'tatemono',
-    korean: '건물',
-    english: 'building',
-    partOfSpeech: 'noun',
-    example: '建物を見る',
-    exampleRuby: [{ 建物: 'たてもの' }, { 見: 'み' }],
-    exampleKorean: '건물을 보다'
-  },
-  {
     kanji: '楽しい',
     hiragana: 'たのしい',
     romaji: 'tanoshii',
@@ -2430,17 +2155,6 @@ export const vocabulary = [
     example: '楽しい時間',
     exampleRuby: [{ 楽: 'たの' }, { 時間: 'じかん' }],
     exampleKorean: '재미있는 시간'
-  },
-  {
-    kanji: '頼む',
-    hiragana: 'たのむ',
-    romaji: 'tanomu',
-    korean: '부탁하다',
-    english: 'to ask',
-    partOfSpeech: 'verb',
-    example: '手伝いを頼む',
-    exampleRuby: [{ 手伝: 'てつだ' }, { 頼: 'たの' }],
-    exampleKorean: '도움을 부탁하다'
   },
   {
     kanji: '',
@@ -2504,9 +2218,9 @@ export const vocabulary = [
     korean: '누구',
     english: 'who',
     partOfSpeech: 'pronoun',
-    example: '誰ですか',
-    exampleRuby: [{ 誰: 'だれ' }],
-    exampleKorean: '누구입니까'
+    example: 'あの人は誰ですか',
+    exampleRuby: [{ 人: 'ひと' }, { 誰: 'だれ' }],
+    exampleKorean: '저 사람은 누구입니까?'
   },
   {
     kanji: '',
@@ -2631,17 +2345,6 @@ export const vocabulary = [
   },
   {
     kanji: '',
-    hiragana: 'ちゃわん',
-    romaji: 'chawan',
-    korean: '그릇',
-    english: 'rice bowl',
-    partOfSpeech: 'noun',
-    example: 'ちゃわんで食べる',
-    exampleRuby: [{ 食: 'た' }],
-    exampleKorean: '그릇으로 먹다'
-  },
-  {
-    kanji: '',
     hiragana: 'ちょうど',
     romaji: 'choudo',
     korean: '정확히, 딱',
@@ -2661,17 +2364,6 @@ export const vocabulary = [
     example: 'ちょっと待つ',
     exampleRuby: [{ 待: 'ま' }],
     exampleKorean: '조금 기다리다'
-  },
-  {
-    kanji: '一日',
-    hiragana: 'ついたち',
-    romaji: 'tsuitachi',
-    korean: '초하루',
-    english: 'first of month',
-    partOfSpeech: 'noun',
-    example: '一日から',
-    exampleRuby: [{ 一日: 'ついたち' }],
-    exampleKorean: '초하루부터'
   },
   {
     kanji: '使う',
@@ -2751,17 +2443,6 @@ export const vocabulary = [
     exampleKorean: '불을 켜다'
   },
   {
-    kanji: '勤める',
-    hiragana: 'つとめる',
-    romaji: 'tsutomeru',
-    korean: '근무하다',
-    english: 'to work for someone',
-    partOfSpeech: 'verb',
-    example: '会社に勤める',
-    exampleRuby: [{ 会社: 'かいしゃ' }, { 勤: 'つと' }],
-    exampleKorean: '회사에 근무하다'
-  },
-  {
     kanji: '',
     hiragana: 'つまらない',
     romaji: 'tsumaranai',
@@ -2807,17 +2488,6 @@ export const vocabulary = [
   },
   {
     kanji: '',
-    hiragana: 'テープ',
-    romaji: 'teepu',
-    korean: '테이프',
-    english: 'tape',
-    partOfSpeech: 'noun',
-    example: 'テープを貼る',
-    exampleRuby: [{ 貼: 'は' }],
-    exampleKorean: '테이프를 붙이다'
-  },
-  {
-    kanji: '',
     hiragana: 'テーブル',
     romaji: 'teeburu',
     korean: '테이블',
@@ -2826,17 +2496,6 @@ export const vocabulary = [
     example: 'テーブルに置く',
     exampleRuby: [{ 置: 'お' }],
     exampleKorean: '테이블에 놓다'
-  },
-  {
-    kanji: '',
-    hiragana: 'テープレコーダー',
-    romaji: 'teepurekoodaa',
-    korean: '테이프 레코더',
-    english: 'tape recorder',
-    partOfSpeech: 'noun',
-    example: 'テープレコーダーを使う',
-    exampleRuby: [{ 使: 'つか' }],
-    exampleKorean: '테이프 레코더를 사용하다'
   },
   {
     kanji: '出かける',
@@ -3043,9 +2702,9 @@ export const vocabulary = [
     korean: '왜',
     english: 'for what reason',
     partOfSpeech: 'adverb',
-    example: 'どうして来た',
-    exampleRuby: [{ 来: 'き' }],
-    exampleKorean: '왜 왔어?'
+    example: 'どうして 学校へ 行きますか。',
+    exampleRuby: [{ 学校: 'がっこう' }, { 行: 'い' }],
+    exampleKorean: '왜 학교에 갑니까?'
   },
   {
     kanji: '',
@@ -3057,17 +2716,6 @@ export const vocabulary = [
     example: 'どうぞよろしく',
     exampleRuby: [],
     exampleKorean: '잘 부탁드립니다'
-  },
-  {
-    kanji: '動物',
-    hiragana: 'どうぶつ',
-    romaji: 'doubutsu',
-    korean: '동물',
-    english: 'animal',
-    partOfSpeech: 'noun',
-    example: '動物園',
-    exampleRuby: [{ 動物: 'どうぶつ' }, { 園: 'えん' }],
-    exampleKorean: '동물원'
   },
   {
     kanji: '',
@@ -3106,12 +2754,12 @@ export const vocabulary = [
     kanji: '時々',
     hiragana: 'ときどき',
     romaji: 'tokidoki',
-    korean: '때때로',
+    korean: '가끔',
     english: 'sometimes',
     partOfSpeech: 'adverb',
-    example: '時々会う',
-    exampleRuby: [{ 時: 'とき' }, { 会: 'あ' }],
-    exampleKorean: '때때로 만나다'
+    example: 'ときどき コーヒーを 飲みます。',
+    exampleRuby: [{ 飲: 'の' }],
+    exampleKorean: '가끔 커피를 마신다.'
   },
   {
     kanji: '時計',
@@ -3134,17 +2782,6 @@ export const vocabulary = [
     example: 'どこに行く',
     exampleRuby: [{ 行: 'い' }],
     exampleKorean: '어디에 가다'
-  },
-  {
-    kanji: '所',
-    hiragana: 'ところ',
-    romaji: 'tokoro',
-    korean: '곳',
-    english: 'place',
-    partOfSpeech: 'noun',
-    example: '静かな所',
-    exampleRuby: [{ 静: 'しず' }, { 所: 'ところ' }],
-    exampleKorean: '조용한 곳'
   },
   {
     kanji: '年',
@@ -3312,17 +2949,6 @@ export const vocabulary = [
     exampleKorean: '책을 집다'
   },
   {
-    kanji: '撮る',
-    hiragana: 'とる',
-    romaji: 'toru',
-    korean: '찍다',
-    english: 'to take a photo or record',
-    partOfSpeech: 'verb',
-    example: '写真を撮る',
-    exampleRuby: [{ 写真: 'しゃしん' }, { 撮: 'と' }],
-    exampleKorean: '사진을 찍다'
-  },
-  {
     kanji: '',
     hiragana: 'どれ',
     romaji: 'dore',
@@ -3332,17 +2958,6 @@ export const vocabulary = [
     example: 'どれがいい',
     exampleRuby: [],
     exampleKorean: '어느 것이 좋다'
-  },
-  {
-    kanji: '',
-    hiragana: 'ナイフ',
-    romaji: 'naifu',
-    korean: '칼',
-    english: 'knife',
-    partOfSpeech: 'noun',
-    example: 'ナイフで切る',
-    exampleRuby: [{ 切: 'き' }],
-    exampleKorean: '칼로 자르다'
   },
   {
     kanji: '中',
@@ -3365,28 +2980,6 @@ export const vocabulary = [
     example: '長い道',
     exampleRuby: [{ 長: 'なが' }, { 道: 'みち' }],
     exampleKorean: '긴 길'
-  },
-  {
-    kanji: '鳴く',
-    hiragana: 'なく',
-    romaji: 'naku',
-    korean: '울다',
-    english: 'animal noise, to chirp',
-    partOfSpeech: 'verb',
-    example: '猫が鳴く',
-    exampleRuby: [{ 猫: 'ねこ' }, { 鳴: 'な' }],
-    exampleKorean: '고양이가 운다'
-  },
-  {
-    kanji: '無くす',
-    hiragana: 'なくす',
-    romaji: 'nakusu',
-    korean: '잃다',
-    english: 'to lose something',
-    partOfSpeech: 'verb',
-    example: '財布を無くす',
-    exampleRuby: [{ 財布: 'さいふ' }, { 無: 'な' }],
-    exampleKorean: '지갑을 잃어버리다'
   },
   {
     kanji: '',
@@ -3532,17 +3125,6 @@ export const vocabulary = [
     exampleKorean: '두 개의 사과'
   },
   {
-    kanji: '賑やか',
-    hiragana: 'にぎやか',
-    romaji: 'nigiyaka',
-    korean: '번화한',
-    english: 'bustling, busy',
-    partOfSpeech: 'adjective',
-    example: '賑やかな街',
-    exampleRuby: [{ 賑: 'にぎ' }, { 街: 'まち' }],
-    exampleKorean: '번화한 거리'
-  },
-  {
     kanji: '肉',
     hiragana: 'にく',
     romaji: 'niku',
@@ -3618,17 +3200,6 @@ export const vocabulary = [
     example: '靴を脱ぐ',
     exampleRuby: [{ 靴: 'くつ' }, { 脱: 'ぬ' }],
     exampleKorean: '신발을 벗다'
-  },
-  {
-    kanji: '温い',
-    hiragana: 'ぬるい',
-    romaji: 'nurui',
-    korean: '미지근한',
-    english: 'lukewarm',
-    partOfSpeech: 'adjective',
-    example: '温いお茶',
-    exampleRuby: [{ 温: 'ぬる' }, { 茶: 'ちゃ' }],
-    exampleKorean: '미지근한 차'
   },
   {
     kanji: '',
@@ -3750,17 +3321,6 @@ export const vocabulary = [
     example: 'はい、そうです',
     exampleRuby: [],
     exampleKorean: '예, 그렇습니다'
-  },
-  {
-    kanji: '灰皿',
-    hiragana: 'はいざら',
-    romaji: 'haizara',
-    korean: '재떨이',
-    english: 'ashtray',
-    partOfSpeech: 'noun',
-    example: '灰皿を使う',
-    exampleRuby: [{ 灰皿: 'はいざら' }, { 使: 'つか' }],
-    exampleKorean: '재떨이를 사용하다'
   },
   {
     kanji: '入る',
@@ -4302,17 +3862,6 @@ export const vocabulary = [
     exampleKorean: '넓은 방'
   },
   {
-    kanji: '',
-    hiragana: 'フィルム',
-    romaji: 'firumu',
-    korean: '필름',
-    english: 'roll of film',
-    partOfSpeech: 'noun',
-    example: 'フィルムを入れる',
-    exampleRuby: [{ 入: 'い' }],
-    exampleKorean: '필름을 넣다'
-  },
-  {
     kanji: '封筒',
     hiragana: 'ふうとう',
     romaji: 'fuutou',
@@ -4333,17 +3882,6 @@ export const vocabulary = [
     example: 'プールで泳ぐ',
     exampleRuby: [{ 泳: 'およ' }],
     exampleKorean: '수영장에서 수영하다'
-  },
-  {
-    kanji: '',
-    hiragana: 'フォーク',
-    romaji: 'fooku',
-    korean: '포크',
-    english: 'fork',
-    partOfSpeech: 'noun',
-    example: 'フォークで食べる',
-    exampleRuby: [{ 食: 'た' }],
-    exampleKorean: '포크로 먹다'
   },
   {
     kanji: '吹く',
@@ -4467,17 +4005,6 @@ export const vocabulary = [
     exampleKorean: '욕조에 들어가다'
   },
   {
-    kanji: '文章',
-    hiragana: 'ぶんしょう',
-    romaji: 'bunshou',
-    korean: '문장',
-    english: 'sentence, text',
-    partOfSpeech: 'noun',
-    example: '文章を書く',
-    exampleRuby: [{ 文章: 'ぶんしょう' }, { 書: 'か' }],
-    exampleKorean: '문장을 쓰다'
-  },
-  {
     kanji: '',
     hiragana: 'ページ',
     romaji: 'peeji',
@@ -4533,17 +4060,6 @@ export const vocabulary = [
     exampleKorean: '방에 들어가다'
   },
   {
-    kanji: '辺',
-    hiragana: 'へん',
-    romaji: 'hen',
-    korean: '지역',
-    english: 'area',
-    partOfSpeech: 'noun',
-    example: 'この辺',
-    exampleRuby: [{ 辺: 'へん' }],
-    exampleKorean: '이 근처'
-  },
-  {
     kanji: '',
     hiragana: 'ペン',
     romaji: 'pen',
@@ -4569,12 +4085,12 @@ export const vocabulary = [
     kanji: '便利',
     hiragana: 'べんり',
     romaji: 'benri',
-    korean: '편리',
-    english: 'useful, convenient',
+    korean: '편리하다',
+    english: 'convenient',
     partOfSpeech: 'adjective',
-    example: '便利な場所',
-    exampleRuby: [{ 便利: 'べんり' }, { 場所: 'ばしょ' }],
-    exampleKorean: '편리한 장소'
+    example: 'このアプリは便利だ',
+    exampleRuby: [{ この: 'この' }, { 便利: 'べんり' }],
+    exampleKorean: '이 앱은 편리하다'
   },
   {
     kanji: '帽子',
@@ -4775,17 +4291,6 @@ export const vocabulary = [
     exampleKorean: '매일 밤 읽다'
   },
   {
-    kanji: '前',
-    hiragana: 'まえ',
-    romaji: 'mae',
-    korean: '전',
-    english: 'before',
-    partOfSpeech: 'noun',
-    example: '前を見る',
-    exampleRuby: [{ 前: 'まえ' }, { 見: 'み' }],
-    exampleKorean: '앞을 보다'
-  },
-  {
     kanji: '曲がる',
     hiragana: 'まがる',
     romaji: 'magaru',
@@ -4863,17 +4368,6 @@ export const vocabulary = [
     exampleKorean: '똑바로 가다'
   },
   {
-    kanji: '',
-    hiragana: 'マッチ',
-    romaji: 'macchi',
-    korean: '경기',
-    english: 'match',
-    partOfSpeech: 'noun',
-    example: 'マッチを見る',
-    exampleRuby: [{ 見: 'み' }],
-    exampleKorean: '경기를 보다'
-  },
-  {
     kanji: '窓',
     hiragana: 'まど',
     romaji: 'mado',
@@ -4905,17 +4399,6 @@ export const vocabulary = [
     example: '万円',
     exampleRuby: [{ 万: 'まん' }, { 円: 'えん' }],
     exampleKorean: '만 엔'
-  },
-  {
-    kanji: '万年筆',
-    hiragana: 'まんねんひつ',
-    romaji: 'mannenpitsu',
-    korean: '만년필',
-    english: 'fountain pen',
-    partOfSpeech: 'noun',
-    example: '万年筆で書く',
-    exampleRuby: [{ 万年筆: 'まんねんひつ' }, { 書: 'か' }],
-    exampleKorean: '만년필로 쓰다'
   },
   {
     kanji: '磨く',
@@ -5006,17 +4489,6 @@ export const vocabulary = [
     exampleKorean: '3일째'
   },
   {
-    kanji: '三つ',
-    hiragana: 'みっつ',
-    romaji: 'mittsu',
-    korean: '세',
-    english: 'three',
-    partOfSpeech: 'number',
-    example: '三つのりんご',
-    exampleRuby: [{ 三: 'みっ' }],
-    exampleKorean: '세 개의 사과'
-  },
-  {
     kanji: '緑',
     hiragana: 'みどり',
     romaji: 'midori',
@@ -5094,17 +4566,6 @@ export const vocabulary = [
     exampleKorean: '6일째'
   },
   {
-    kanji: '向こう',
-    hiragana: 'むこう',
-    romaji: 'mukou',
-    korean: '저쪽',
-    english: 'over there',
-    partOfSpeech: 'noun',
-    example: '向こうへ行く',
-    exampleRuby: [{ 向: 'む' }, { 行: 'い' }],
-    exampleKorean: '저쪽으로 가다'
-  },
-  {
     kanji: '難しい',
     hiragana: 'むずかしい',
     romaji: 'muzukashii',
@@ -5177,9 +4638,9 @@ export const vocabulary = [
     korean: '벌써',
     english: 'already',
     partOfSpeech: 'adverb',
-    example: 'もう来た',
-    exampleRuby: [{ 来: 'き' }],
-    exampleKorean: '벌써 왔다'
+    example: 'もう ご飯を 食べました。',
+    exampleRuby: [{ ご飯: 'ごはん' }, { 食べ: 'たべ' }],
+    exampleKorean: '이미 밥을 먹었습니다.'
   },
   {
     kanji: 'もう一度',
@@ -5246,28 +4707,6 @@ export const vocabulary = [
     example: '門を開ける',
     exampleRuby: [{ 門: 'もん' }, { 開: 'あ' }],
     exampleKorean: '문을 열다'
-  },
-  {
-    kanji: '問題',
-    hiragana: 'もんだい',
-    romaji: 'mondai',
-    korean: '문제',
-    english: 'problem',
-    partOfSpeech: 'noun',
-    example: '問題を解く',
-    exampleRuby: [{ 問題: 'もんだい' }, { 解: 'と' }],
-    exampleKorean: '문제를 풀다'
-  },
-  {
-    kanji: '八百屋',
-    hiragana: 'やおや',
-    romaji: 'yaoya',
-    korean: '청과물',
-    english: 'greengrocer',
-    partOfSpeech: 'noun',
-    example: '八百屋で買う',
-    exampleRuby: [{ 八百屋: 'やおや' }, { 買: 'か' }],
-    exampleKorean: '청과물 가게에서 사다'
   },
   {
     kanji: '野菜',
@@ -5424,17 +4863,6 @@ export const vocabulary = [
     exampleKorean: '눈이 내리다'
   },
   {
-    kanji: '行く',
-    hiragana: 'いく',
-    romaji: 'iku',
-    korean: '가다',
-    english: 'to go',
-    partOfSpeech: 'verb',
-    example: '学校に行く',
-    exampleRuby: [{ 学校: 'がっこう' }, { 行: 'い' }],
-    exampleKorean: '학교에 가다'
-  },
-  {
     kanji: '',
     hiragana: 'ゆっくりと',
     romaji: 'yukkuri',
@@ -5578,50 +5006,6 @@ export const vocabulary = [
     exampleKorean: '라디오를 듣다'
   },
   {
-    kanji: '',
-    hiragana: 'ラジカセ',
-    romaji: 'rajikase',
-    korean: '카세트',
-    english: 'radio cassette player',
-    partOfSpeech: 'noun',
-    example: 'ラジカセを使う',
-    exampleRuby: [{ 使: 'つか' }],
-    exampleKorean: '카세트를 사용하다'
-  },
-  {
-    kanji: '',
-    hiragana: 'りっぱ',
-    romaji: 'rippa',
-    korean: '훌륭함',
-    english: 'splendid',
-    partOfSpeech: 'adjective',
-    example: 'りっぱな人',
-    exampleRuby: [{ 人: 'ひと' }],
-    exampleKorean: '훌륭한 사람'
-  },
-  {
-    kanji: '留学生',
-    hiragana: 'りゅうがくせい',
-    romaji: 'ryuugakusei',
-    korean: '유학생',
-    english: 'overseas student',
-    partOfSpeech: 'noun',
-    example: '留学生になる',
-    exampleRuby: [{ 留学生: 'りゅうがくせい' }],
-    exampleKorean: '유학생이 되다'
-  },
-  {
-    kanji: '両親',
-    hiragana: 'りょうしん',
-    romaji: 'ryoushin',
-    korean: '부모',
-    english: 'both parents',
-    partOfSpeech: 'noun',
-    example: '両親に会う',
-    exampleRuby: [{ 両親: 'りょうしん' }, { 会: 'あ' }],
-    exampleKorean: '부모님을 만나다'
-  },
-  {
     kanji: '料理',
     hiragana: 'りょうり',
     romaji: 'ryouri',
@@ -5644,17 +5028,6 @@ export const vocabulary = [
     exampleKorean: '여행을 가다'
   },
   {
-    kanji: '零',
-    hiragana: 'れい',
-    romaji: 'rei',
-    korean: '영',
-    english: 'zero',
-    partOfSpeech: 'number',
-    example: '零から始める',
-    exampleRuby: [{ 零: 'れい' }, { 始: 'はじ' }],
-    exampleKorean: '영에서 시작하다'
-  },
-  {
     kanji: '冷蔵庫',
     hiragana: 'れいぞうこ',
     romaji: 'reizouko',
@@ -5664,17 +5037,6 @@ export const vocabulary = [
     example: '冷蔵庫に入れる',
     exampleRuby: [{ 冷蔵庫: 'れいぞうこ' }, { 入: 'い' }],
     exampleKorean: '냉장고에 넣다'
-  },
-  {
-    kanji: '',
-    hiragana: 'レコード',
-    romaji: 'rekoodo',
-    korean: '레코드, 음반',
-    english: 'record (vinyl)',
-    partOfSpeech: 'noun',
-    example: 'レコードを聞く',
-    exampleRuby: [{ 聞: 'き' }],
-    exampleKorean: '레코드를 듣다'
   },
   {
     kanji: '',
@@ -5697,17 +5059,6 @@ export const vocabulary = [
     example: '練習をする',
     exampleRuby: [{ 練習: 'れんしゅう' }],
     exampleKorean: '연습을 하다'
-  },
-  {
-    kanji: '廊下',
-    hiragana: 'ろうか',
-    romaji: 'rouka',
-    korean: '복도',
-    english: 'corridor',
-    partOfSpeech: 'noun',
-    example: '廊下を歩く',
-    exampleRuby: [{ 廊下: 'ろうか' }, { 歩: 'ある' }],
-    exampleKorean: '복도를 걷다'
   },
   {
     kanji: '六',
@@ -5807,6 +5158,347 @@ export const vocabulary = [
     example: '悪い天気',
     exampleRuby: [{ 悪: 'わる' }, { 天気: 'てんき' }],
     exampleKorean: '나쁜 날씨'
+  },
+  {
+    kanji: '聞く',
+    hiragana: 'きく',
+    romaji: 'kiku',
+    korean: '듣다',
+    english: 'to hear, to listen',
+    partOfSpeech: 'verb',
+    example: '音楽を聞く',
+    exampleRuby: [{ 音楽: 'おんがく' }, { 聞: 'き' }],
+    exampleKorean: '음악을 듣다'
+  },
+  {
+    kanji: '買う',
+    hiragana: 'かう',
+    romaji: 'kau',
+    korean: '사다',
+    english: 'to buy',
+    partOfSpeech: 'verb',
+    example: '本を買う',
+    exampleRuby: [{ 本: 'ほん' }, { 買: 'か' }],
+    exampleKorean: '책을 사다'
+  },
+  {
+    kanji: '書く',
+    hiragana: 'かく',
+    romaji: 'kaku',
+    korean: '쓰다',
+    english: 'to write',
+    partOfSpeech: 'verb',
+    example: '名前を書く',
+    exampleRuby: [{ 名前: 'なまえ' }, { 書: 'か' }],
+    exampleKorean: '이름을 쓰다'
+  },
+  {
+    kanji: '借りる',
+    hiragana: 'かりる',
+    romaji: 'kariru',
+    korean: '빌리다',
+    english: 'to borrow',
+    partOfSpeech: 'verb',
+    example: '図書館で本を借りる',
+    exampleRuby: [{ 図書館: 'としょかん' }, { 本: 'ほん' }, { 借: 'か' }],
+    exampleKorean: '도서관에서 책을 빌리다'
+  },
+  {
+    kanji: '返す',
+    hiragana: 'かえす',
+    romaji: 'kaesu',
+    korean: '돌려주다',
+    english: 'to return',
+    partOfSpeech: 'verb',
+    example: '友達に本を返す',
+    exampleRuby: [{ 友達: 'ともだち' }, { 本: 'ほん' }, { 返: 'かえ' }],
+    exampleKorean: '친구에게 책을 돌려주다'
+  },
+  {
+    kanji: '教える',
+    hiragana: 'おしえる',
+    romaji: 'oshieru',
+    korean: '가르치다',
+    english: 'to teach',
+    partOfSpeech: 'verb',
+    example: '先生が日本語を教える',
+    exampleRuby: [{ 先生: 'せんせい' }, { 日本語: 'にほんご' }, { 教: 'おし' }],
+    exampleKorean: '선생님이 일본어를 가르치다'
+  },
+  {
+    kanji: '帰る',
+    hiragana: 'かえる',
+    romaji: 'kaeru',
+    korean: '돌아가다',
+    english: 'to return home',
+    partOfSpeech: 'verb',
+    example: '家に帰る',
+    exampleRuby: [{ 家: 'いえ' }, { 帰: 'かえ' }],
+    exampleKorean: '집에 돌아가다'
+  },
+  {
+    kanji: '起きる',
+    hiragana: 'おきる',
+    romaji: 'okiru',
+    korean: '일어나다',
+    english: 'to wake up, to get up',
+    partOfSpeech: 'verb',
+    example: '毎朝六時に起きる',
+    exampleRuby: [{ 毎: 'まい' }, { 朝: 'あさ' }, { 六: 'ろく' }, { 時: 'じ' }, { 起: 'お' }],
+    exampleKorean: '매일 아침 여섯 시에 일어나다'
+  },
+  {
+    kanji: '多い',
+    hiragana: 'おおい',
+    romaji: 'ooi',
+    korean: '많은',
+    english: 'many, much',
+    partOfSpeech: 'adjective',
+    example: '人が多い',
+    exampleRuby: [{ 人: 'ひと' }, { 多: 'おお' }],
+    exampleKorean: '사람이 많다'
+  },
+  {
+    kanji: '遅い',
+    hiragana: 'おそい',
+    romaji: 'osoi',
+    korean: '늦은',
+    english: 'late, slow',
+    partOfSpeech: 'adjective',
+    example: '電車が遅い',
+    exampleRuby: [{ 電車: 'でんしゃ' }, { 遅: 'おそ' }],
+    exampleKorean: '전철이 늦다'
+  },
+  {
+    kanji: '重い',
+    hiragana: 'おもい',
+    romaji: 'omoi',
+    korean: '무거운',
+    english: 'heavy',
+    partOfSpeech: 'adjective',
+    example: 'このかばんは重い',
+    exampleRuby: [{ 重: 'おも' }],
+    exampleKorean: '이 가방은 무겁다'
+  },
+  {
+    kanji: '軽い',
+    hiragana: 'かるい',
+    romaji: 'karui',
+    korean: '가벼운',
+    english: 'light',
+    partOfSpeech: 'adjective',
+    example: 'この荷物は軽い',
+    exampleRuby: [{ 荷物: 'にもつ' }, { 軽: 'かる' }],
+    exampleKorean: '이 짐은 가볍다'
+  },
+  {
+    kanji: '暗い',
+    hiragana: 'くらい',
+    romaji: 'kurai',
+    korean: '어두운',
+    english: 'dark',
+    partOfSpeech: 'adjective',
+    example: 'この部屋は暗い',
+    exampleRuby: [{ 部屋: 'へや' }, { 暗: 'くら' }],
+    exampleKorean: '이 방은 어둡다'
+  },
+  {
+    kanji: '面白い',
+    hiragana: 'おもしろい',
+    romaji: 'omoshiroi',
+    korean: '재미있는',
+    english: 'interesting, funny',
+    partOfSpeech: 'adjective',
+    example: 'この映画は面白い',
+    exampleRuby: [{ 映画: 'えいが' }, { 面白: 'おもしろ' }],
+    exampleKorean: '이 영화는 재미있다'
+  },
+  {
+    kanji: '',
+    hiragana: 'もうすぐ',
+    romaji: 'mousugu',
+    korean: '곧',
+    english: 'soon',
+    partOfSpeech: 'adverb',
+    example: 'もうすぐ雨が降る',
+    exampleRuby: [{ 雨: 'あめ' }, { 降: 'ふ' }],
+    exampleKorean: '곧 비가 오다'
+  },
+  {
+    kanji: '',
+    hiragana: 'たいてい',
+    romaji: 'taitei',
+    korean: '대개',
+    english: 'usually, generally',
+    partOfSpeech: 'adverb',
+    example: 'たいてい家で勉強する',
+    exampleRuby: [{ 家: 'いえ' }, { 勉強: 'べんきょう' }],
+    exampleKorean: '대개 집에서 공부하다'
+  },
+  {
+    kanji: '',
+    hiragana: 'だいたい',
+    romaji: 'daitai',
+    korean: '대략',
+    english: 'roughly, approximately',
+    partOfSpeech: 'adverb',
+    example: 'だいたい分かる',
+    exampleRuby: [{ 分: 'わ' }],
+    exampleKorean: '대략 알다'
+  },
+  {
+    kanji: '切符',
+    hiragana: 'きっぷ',
+    romaji: 'kippu',
+    korean: '표',
+    english: 'ticket',
+    partOfSpeech: 'noun',
+    example: '切符を買う',
+    exampleRuby: [{ 切符: 'きっぷ' }, { 買: 'か' }],
+    exampleKorean: '표를 사다'
+  },
+  {
+    kanji: 'お金',
+    hiragana: 'おかね',
+    romaji: 'okane',
+    korean: '돈',
+    english: 'money',
+    partOfSpeech: 'noun',
+    example: 'お金がない',
+    exampleRuby: [{ 金: 'かね' }],
+    exampleKorean: '돈이 없다'
+  },
+  {
+    kanji: '家族',
+    hiragana: 'かぞく',
+    romaji: 'kazoku',
+    korean: '가족',
+    english: 'family',
+    partOfSpeech: 'noun',
+    example: '家族と住んでいる',
+    exampleRuby: [{ 家族: 'かぞく' }, { 住: 'す' }],
+    exampleKorean: '가족과 살다'
+  },
+  {
+    kanji: '場所',
+    hiragana: 'ばしょ',
+    romaji: 'basho',
+    korean: '장소',
+    english: 'place',
+    partOfSpeech: 'noun',
+    example: 'ここはいい場所だ。',
+    exampleRuby: [{ 場所: 'ばしょ' }],
+    exampleKorean: '여기는 좋은 장소다.'
+  },
+  {
+    kanji: '何',
+    hiragana: 'なに／なん',
+    romaji: 'nani/nan',
+    korean: '무엇',
+    english: 'what',
+    partOfSpeech: 'pronoun',
+    example: 'それは何ですか。',
+    exampleRuby: [{ 何: 'なに' }],
+    exampleKorean: '그것은 무엇입니까?'
+  },
+  {
+    kanji: 'この',
+    hiragana: 'この',
+    romaji: 'kono',
+    korean: '이',
+    english: 'this',
+    partOfSpeech: 'demonstrative',
+    example: 'この本はおもしろいです。',
+    exampleRuby: [{ 本: 'ほん' }],
+    exampleKorean: '이 책은 재미있습니다.'
+  },
+  {
+    kanji: 'あの',
+    hiragana: 'あの',
+    romaji: 'ano',
+    korean: '저',
+    english: 'that',
+    partOfSpeech: 'demonstrative',
+    example: 'あの店は有名です。',
+    exampleRuby: [{ 店: 'みせ' }, { 有名: 'ゆうめい' }],
+    exampleKorean: '저 가게는 유명합니다.'
+  },
+  {
+    kanji: 'その',
+    hiragana: 'その',
+    romaji: 'sono',
+    korean: '그',
+    english: 'that',
+    partOfSpeech: 'demonstrative',
+    example: 'そのかばんはだれのですか。',
+    exampleRuby: [{ だれ: 'だれ' }],
+    exampleKorean: '그 가방은 누구의 것입니까?'
+  },
+  {
+    kanji: 'そして',
+    hiragana: 'そして',
+    romaji: 'soshite',
+    korean: '그리고',
+    english: 'and',
+    partOfSpeech: 'conjunction',
+    example: 'パンを食べました。そして、牛乳を飲みました。',
+    exampleRuby: [{ パン: 'ぱん' }, { 食べ: 'たべ' }, { 牛乳: 'ぎゅうにゅう' }, { 飲: 'の' }],
+    exampleKorean: '빵을 먹었다. 그리고 우유를 마셨다.'
+  },
+  {
+    kanji: '時',
+    hiragana: 'とき',
+    romaji: 'toki',
+    korean: '때',
+    english: 'when',
+    partOfSpeech: 'noun',
+    example: '学生のとき、日本へ行きました。',
+    exampleRuby: [{ 学生: 'がくせい' }, { 日本: 'にほん' }, { 行: 'い' }],
+    exampleKorean: '학생 때 일본에 갔다.'
+  },
+  {
+    kanji: '',
+    hiragana: 'から',
+    romaji: 'kara',
+    korean: '~해서 / ~이기 때문에',
+    english: 'because',
+    partOfSpeech: 'particle',
+    example: '雨ですから、行きません。',
+    exampleRuby: [{ 雨: 'あめ' }, { 行: 'い' }],
+    exampleKorean: '비가 와서 가지 않는다.'
+  },
+  {
+    kanji: '少し',
+    hiragana: 'すこし',
+    romaji: 'sukoshi',
+    korean: '조금',
+    english: 'a little',
+    partOfSpeech: 'adverb',
+    example: '日本語がすこし分かります。',
+    exampleRuby: [{ 日本語: 'にほんご' }, { 分: 'わ' }],
+    exampleKorean: '일본어를 조금 안다.'
+  },
+  {
+    kanji: '',
+    hiragana: 'ください',
+    romaji: 'kudasai',
+    korean: '주세요',
+    english: 'please',
+    partOfSpeech: 'verb',
+    example: '水をください。',
+    exampleRuby: [{ 水: 'みず' }],
+    exampleKorean: '물 주세요.'
+  },
+  {
+    kanji: '',
+    hiragana: 'どうやって',
+    romaji: 'douyatte',
+    korean: '어떻게',
+    english: 'how',
+    partOfSpeech: 'adverb',
+    example: 'どうやって駅へ行きますか。',
+    exampleRuby: [{ 駅: 'えき' }, { 行: 'い' }],
+    exampleKorean: '어떻게 역에 갑니까?'
   }
 ]
 
