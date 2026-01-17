@@ -64,15 +64,110 @@ export const animations = [
         exampleRuby: [{ '悪': 'わる' }, { '男': 'おとこ' }],
         exampleKorean: '포기를 모르는 남자지',
         exampleHiragana: 'あきらめのわるいおとこ'
+      },
+      {
+        kanji: '',
+        hiragana: 'から',
+        romaji: 'kara',
+        korean: '~이기 때문에',
+        english: 'because',
+        partOfSpeech: 'particle',
+        example: '天才ですから',
+        exampleRuby: [],
+        exampleKorean: '천재니까요',
+        exampleHiragana: 'てんさいですから'
+      },
+      {
+        kanji: '必ず',
+        hiragana: 'かならず',
+        romaji: 'kanarazu',
+        korean: '반드시',
+        english: 'always',
+        partOfSpeech: 'adverb',
+        example: '必ず勝利する!',
+        exampleRuby: [{ '必': 'かなら' }, { '勝利': 'しょうり' }],
+        exampleKorean: '반드시 승리한다!',
+        exampleHiragana: 'かならずしょうりする!'
+      },
+      {
+        kanji: '添える',
+        hiragana: 'そえる',
+        romaji: 'soeru',
+        korean: '곁들이다, 거들다',
+        english: 'to accompany',
+        partOfSpeech: 'verb',
+        example: '左手は そえるだけ',
+        exampleRuby: [{ '左手': 'ひだりて' }, { '添': 'そ' }],
+        exampleKorean: '왼손은 거들 뿐',
+        exampleHiragana: 'ひだりては そえるだけ'
       }
     ]
   },
   {
     id: 'my-hero-academia',
-    name: '나의 히어로 아카데이마',
+    name: '나의 히어로 아카데미아',
     nameJapanese: '僕のヒーローアカデミア',
     words: [
-      // 나중에 추가될 예정
+      {
+        kanji: '君',
+        hiragana: 'きみ',
+        romaji: 'kimi',
+        korean: '너',
+        english: 'you',
+        partOfSpeech: 'noun',
+        example: '君はヒーローになれる',
+        exampleRuby: [{ '君': 'きみ' }],
+        exampleKorean: '너는 히어로가 될 수 있다',
+        exampleHiragana: 'きみはひーろーになれる'
+      },
+      {
+        kanji: '平和',
+        hiragana: 'へいわ',
+        romaji: 'hewa',
+        korean: '평화',
+        english: 'peace',
+        partOfSpeech: 'noun',
+        example: '平和の象徴',
+        exampleRuby: [{ '平和': 'へいわ' }, { '象徴': 'しょうちょう' }],
+        exampleKorean: '평화의 상징',
+        exampleHiragana: 'へいわのしょうちょう'
+      },
+      {
+        kanji: '最高',
+        hiragana: 'さいこう',
+        romaji: 'saiko',
+        korean: '최고',
+        english: 'best',
+        partOfSpeech: 'noun',
+        example: 'これは俺が最高のヒーローになるまでの物語だ',
+        exampleRuby: [{ '俺': 'おれ' }, { '最': 'さい' }, { '高': 'こう' }, { '物語': 'ものがたり' }],
+        exampleKorean: '이것은 내가 최고의 히어로가 되기까지의 이야기다',
+        exampleHiragana: 'これはおれがさいこうのひーろーになるまでのものがたりだ'
+      },
+      {
+        kanji: '顔',
+        hiragana: 'かお',
+        romaji: 'kao',
+        korean: '얼굴',
+        english: 'face',
+        partOfSpeech: 'noun',
+        example: '君が助けを求める顔してた',
+        exampleRuby: [{ '君': 'きみ' }, { '助': 'たす' }, { '求': 'もと' }, { '顔': 'かお' }],
+        exampleKorean: '네가 도움을 구하는 얼굴을 했어',
+        exampleHiragana: 'きみがたすけをもとめるかおしてた'
+      },
+      {
+        kanji: '活動',
+        hiragana: 'かつどう',
+        romaji: 'katsudo',
+        korean: '활동',
+        english: 'activity',
+        partOfSpeech: 'noun',
+        example: 'ヒーローってのは本来奉仕活動',
+        exampleRuby: [{ '本来': 'ほんらい' }, { '奉仕': 'ほうし' }, { '活動': 'かつどう' }],
+        exampleKorean: '히어로라는 것은 원래 봉사활동이다',
+        exampleHiragana: 'ひーろーってのはほんらいほうしかつどう'
+      }
     ]
   },
   {
