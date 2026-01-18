@@ -155,6 +155,18 @@ export const animations = [
         exampleRuby: [{ '君': 'きみ' }, { '助': 'たす' }, { '求': 'もと' }, { '顔': 'かお' }],
         exampleKorean: '네가 도움을 구하는 얼굴을 했어',
         exampleHiragana: 'きみがたすけをもとめるかおしてた'
+      },
+      {
+        kanji: '',
+        hiragana: 'さらに',
+        romaji: 'sarani',
+        korean: '좀 더, 더욱',
+        english: 'further, more, additionally',
+        partOfSpeech: 'adverb',
+        example: 'さらに向こうへ！PLUS ULTRA！',
+        exampleRuby: [{ 'さらに': 'さらに' }, { '向': 'む' }],
+        exampleKorean: '좀 더 먼 곳으로! PLUS ULTRA!',
+        exampleHiragana: 'さらにむこうへ！PLUS ULTRA！'
       }
     ]
   },
