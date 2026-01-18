@@ -125,6 +125,11 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
 
   const handleNext = () => {
     if (currentIndex < quizData.length - 1) {
+      // 상태를 즉시 초기화하여 다음 문제로 넘어갈 때 깜빡임 방지
+      setSelectedAnswer(null)
+      setWrongAnswers([])
+      setHasAnswered(false)
+      setFlippedOptions(new Set())
       setCurrentIndex(currentIndex + 1)
     } else {
       // 모든 문제 완료
@@ -636,7 +641,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
 
               return (
                 <div
-                  key={`${option.romaji}-${index}`}
+                  key={`${currentIndex}-${option.romaji}-${index}`}
                   className={`option-wrapper ${isFlipped ? 'flipped' : ''}`}
                 >
                   <div className="option-card-inner">
@@ -648,7 +653,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
                         {option.hiragana}
                       </button>
                     </div>
-                    <div className="option-card-back" onClick={() => hasAnswered && speakText(option.hiragana)} style={{ cursor: hasAnswered ? 'pointer' : 'default' }}>
+                    <div className={`option-card-back ${hasAnswered && isCorrect ? 'correct' : ''}`} onClick={() => hasAnswered && speakText(option.hiragana)} style={{ cursor: hasAnswered ? 'pointer' : 'default' }}>
                       <div className="option-word-info-content">
                         {option.kanji && <div className="option-word-kanji">{option.kanji}</div>}
                         <div className="option-word-hiragana">{option.hiragana}</div>

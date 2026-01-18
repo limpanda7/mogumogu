@@ -707,7 +707,7 @@ function QuizPage({ quizWords, onComplete }) {
                         {option.hiragana}
                       </button>
                     </div>
-                    <div className="option-card-back" onClick={() => hasAnswered && speakText(option.hiragana)} style={{ cursor: hasAnswered ? 'pointer' : 'default' }}>
+                    <div className={`option-card-back ${hasAnswered && isCorrect ? 'correct' : ''}`} onClick={() => hasAnswered && speakText(option.hiragana)} style={{ cursor: hasAnswered ? 'pointer' : 'default' }}>
                       <div className="option-word-info-content">
                         {option.kanji && <div className="option-word-kanji">{option.kanji}</div>}
                         <div className="option-word-hiragana">{option.hiragana}</div>
