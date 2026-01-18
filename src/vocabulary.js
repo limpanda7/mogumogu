@@ -265,7 +265,7 @@ export const vocabulary = [
     exampleKorean: '나중에 만나요'
   },
   {
-    kanji: '',
+    kanji: '貴方',
     hiragana: 'あなた',
     romaji: 'anata',
     korean: '당신',
@@ -1107,9 +1107,9 @@ export const vocabulary = [
     korean: '목소리',
     english: 'Voice',
     partOfSpeech: 'noun',
-    example: '声が聞こえる',
+    example: '声を聞く',
     exampleRuby: [{ 声: 'こえ' }, { 聞: 'き' }],
-    exampleKorean: '목소리가 들린다'
+    exampleKorean: '목소리를 듣다'
   },
   {
     kanji: '',
@@ -1130,7 +1130,7 @@ export const vocabulary = [
     english: 'Coffee',
     partOfSpeech: 'noun',
     example: 'コーヒーを飲む',
-    exampleRuby: [],
+    exampleRuby: [{ 飲: 'の' }],
     exampleKorean: '커피를 마시다'
   },
   {
@@ -1418,17 +1418,6 @@ export const vocabulary = [
     example: '塩をかける',
     exampleRuby: [{ 塩: 'しお' }],
     exampleKorean: '소금을 뿌리다'
-  },
-  {
-    kanji: '',
-    hiragana: 'しかし',
-    romaji: 'shikashi',
-    korean: '그러나',
-    english: 'However',
-    partOfSpeech: 'conjunction',
-    example: 'しかし難しい',
-    exampleRuby: [{ 難: 'むずか' }],
-    exampleKorean: '그러나 어렵다'
   },
   {
     kanji: '時間',
@@ -5171,6 +5160,28 @@ export const vocabulary = [
     exampleKorean: '음악을 듣다'
   },
   {
+    kanji: '昨日',
+    hiragana: 'きのう',
+    romaji: 'kinou',
+    korean: '어제',
+    english: 'yesterday',
+    partOfSpeech: 'noun',
+    example: '昨日は雨でした',
+    exampleRuby: [{ 昨日: 'きのう' }, { 雨: 'あめ' }],
+    exampleKorean: '어제는 비였습니다'
+  },
+  {
+    kanji: '今日',
+    hiragana: 'きょう',
+    romaji: 'kyou',
+    korean: '오늘',
+    english: 'today',
+    partOfSpeech: 'noun',
+    example: '今日は暑いです',
+    exampleRuby: [{ 今日: 'きょう' }, { 暑: 'あつ' }],
+    exampleKorean: '오늘은 덥습니다'
+  },
+  {
     kanji: '買う',
     hiragana: 'かう',
     romaji: 'kau',
@@ -5334,17 +5345,6 @@ export const vocabulary = [
     example: 'たいてい家で勉強する',
     exampleRuby: [{ 家: 'いえ' }, { 勉強: 'べんきょう' }],
     exampleKorean: '대개 집에서 공부하다'
-  },
-  {
-    kanji: '',
-    hiragana: 'だいたい',
-    romaji: 'daitai',
-    korean: '대략',
-    english: 'roughly, approximately',
-    partOfSpeech: 'adverb',
-    example: 'だいたい分かる',
-    exampleRuby: [{ 分: 'わ' }],
-    exampleKorean: '대략 알다'
   },
   {
     kanji: '切符',

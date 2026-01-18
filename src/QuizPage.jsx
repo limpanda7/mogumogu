@@ -186,8 +186,8 @@ function QuizPage({ quizWords, onComplete }) {
         answerType = 'slow'
       }
 
-      // 숙련도 업데이트
-      const masteryData = updateMasteryOnAnswer(currentQuiz, answerType, answerTimeMs)
+      // 숙련도 업데이트 (정답을 맞춘 경우)
+      const masteryData = updateMasteryOnAnswer(currentQuiz, answerType, answerTimeMs, true)
 
       // 복습 간격 메시지 설정
       const reviewTimeText = getReviewIntervalMessage(masteryData.currentInterval)
@@ -210,9 +210,9 @@ function QuizPage({ quizWords, onComplete }) {
     setSelectedAnswer(currentQuiz.romaji)
     setHasAnswered(true)
 
-    // 숙련도 업데이트 (모르겠음 = wrong 처리)
+    // 숙련도 업데이트 (모르겠음 = wrong 처리, 정답을 맞춘 것이 아니므로 false)
     const answerTime = Date.now() - questionStartTimeRef.current
-    const masteryData = updateMasteryOnAnswer(currentQuiz, 'wrong', answerTime)
+    const masteryData = updateMasteryOnAnswer(currentQuiz, 'wrong', answerTime, false)
 
     // 복습 간격 메시지 설정
     const reviewTimeText = getReviewIntervalMessage(masteryData.currentInterval)

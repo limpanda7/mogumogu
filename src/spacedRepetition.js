@@ -104,7 +104,8 @@ const increaseIntervalByTwo = (currentIntervalType) => {
 // 단어별 복습 데이터 초기화
 const getInitialMasteryData = () => ({
   currentInterval: null, // 현재 복습 간격 enum (null이면 처음 본 단어)
-  nextReviewTime: Date.now() // 다음 복습 시간
+  nextReviewTime: Date.now(), // 다음 복습 시간
+  hasAnsweredCorrectly: false // 정답을 맞춘 적이 있는지 여부
 })
 
 // 단어 고유 키 생성 (kanji가 있으면 kanji, 없으면 hiragana 사용)
@@ -134,13 +135,19 @@ export const saveWordMasteryData = (word, masteryData) => {
 }
 
 // 정답 패턴에 따른 복습 간격 업데이트
-export const updateMasteryOnAnswer = (word, answerType, answerTime = null) => {
+export const updateMasteryOnAnswer = (word, answerType, answerTime = null, isCorrectAnswer = false) => {
   // answerType: 'quick' (5초 이내), 'moderate' (5~10초), 'slow' (10초 이후), 'wrong' (오답/모르겠음)
+  // isCorrectAnswer: 정답을 맞췄는지 여부 (true: 정답 맞춤, false: 모르겠어요 버튼 클릭)
   const masteryData = getWordMasteryData(word)
   const now = Date.now()
   const isNewWord = masteryData.currentInterval === null
 
   let nextIntervalType
+
+  // 정답을 맞춘 경우에만 hasAnsweredCorrectly 플래그 설정
+  if (isCorrectAnswer) {
+    masteryData.hasAnsweredCorrectly = true
+  }
 
   if (answerType === ANSWER_TYPE.WRONG) {
     // wrong은 무조건 immediate
@@ -440,4 +447,21 @@ export const getAllWordsByInterval = (vocabulary) => {
 // 단어 숙련도 데이터 초기화 (테스트용)
 export const resetMasteryData = () => {
   localStorage.removeItem(STORAGE_KEY)
+}
+
+// 학습한 단어 수 계산 (정답을 맞춘 적이 있는 단어들)
+export const getLearnedWordsCount = (vocabulary) => {
+  const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+  let learnedCount = 0
+  
+  vocabulary.forEach(word => {
+    const wordKey = getWordKey(word)
+    const masteryData = allMasteryData[wordKey] || getInitialMasteryData()
+    // hasAnsweredCorrectly가 true인 단어만 학습한 단어로 간주
+    if (masteryData.hasAnsweredCorrectly === true) {
+      learnedCount++
+    }
+  })
+  
+  return learnedCount
 }

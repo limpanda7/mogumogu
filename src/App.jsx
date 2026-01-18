@@ -8,6 +8,7 @@ import SettingsPage from './SettingsPage'
 import AnimationSelectPage from './AnimationSelectPage'
 import AnimationQuizPage from './AnimationQuizPage'
 import { selectQuizWords } from './spacedRepetition'
+import LearnedWordsCounter from './LearnedWordsCounter'
 
 // localStorage 키
 const STORAGE_KEYS = {
@@ -24,25 +25,25 @@ function App() {
   const [quizWords, setQuizWords] = useState([])
   const [resultQuizWords, setResultQuizWords] = useState([])
   const [selectedAnimation, setSelectedAnimation] = useState(null)
-  
+
   // 로컬스토리지에서 문제 수 가져오기
   const getQuizCount = () => {
     const saved = localStorage.getItem(STORAGE_KEYS.QUIZ_COUNT)
     return saved ? parseInt(saved, 10) : 10
   }
-  
+
   const [quizCount, setQuizCount] = useState(getQuizCount)
-  
+
   // 로컬스토리지 변경 감지
   useEffect(() => {
     const handleStorageChange = () => {
       setQuizCount(getQuizCount())
     }
-    
+
     window.addEventListener('storage', handleStorageChange)
     // 주기적으로 확인 (같은 탭에서 변경된 경우)
     const interval = setInterval(handleStorageChange, 500)
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange)
       clearInterval(interval)
@@ -128,36 +129,67 @@ function App() {
   }
 
   if (showQuiz) {
-    return <QuizPage quizWords={quizWords} onComplete={handleQuizComplete} />
+    return (
+      <>
+        <LearnedWordsCounter />
+        <QuizPage quizWords={quizWords} onComplete={handleQuizComplete} />
+      </>
+    )
   }
 
   if (showResult) {
-    return <ResultPage quizWords={resultQuizWords} onBack={handleBackFromResult} />
+    return (
+      <>
+        <LearnedWordsCounter />
+        <ResultPage quizWords={resultQuizWords} onBack={handleBackFromResult} />
+      </>
+    )
   }
 
   if (showCompletedWords) {
-    return <CompletedWordsPage onBack={handleBackFromCompletedWords} />
+    return (
+      <>
+        <LearnedWordsCounter />
+        <CompletedWordsPage onBack={handleBackFromCompletedWords} />
+      </>
+    )
   }
 
   if (showSettings) {
-    return <SettingsPage onBack={handleBackFromSettings} />
+    return (
+      <>
+        <LearnedWordsCounter />
+        <SettingsPage onBack={handleBackFromSettings} />
+      </>
+    )
   }
 
   if (showAnimationSelect) {
-    return <AnimationSelectPage onBack={handleBackFromAnimationSelect} onSelectAnimation={handleSelectAnimation} />
+    return (
+      <>
+        <LearnedWordsCounter />
+        <AnimationSelectPage onBack={handleBackFromAnimationSelect} onSelectAnimation={handleSelectAnimation} />
+      </>
+    )
   }
 
   if (showAnimationQuiz && selectedAnimation) {
-    return <AnimationQuizPage 
-      animationWords={selectedAnimation.words} 
-      animationName={selectedAnimation.name}
-      animationNameJapanese={selectedAnimation.nameJapanese}
-      onComplete={handleAnimationQuizComplete} 
-    />
+    return (
+      <>
+        <LearnedWordsCounter />
+        <AnimationQuizPage
+          animationWords={selectedAnimation.words}
+          animationName={selectedAnimation.name}
+          animationNameJapanese={selectedAnimation.nameJapanese}
+          onComplete={handleAnimationQuizComplete}
+        />
+      </>
+    )
   }
 
   return (
       <div className="app">
+      <LearnedWordsCounter />
       <div className="main-container main-centered page-enter">
         <div className="main-content">
           <h1 className="main-title">
@@ -166,7 +198,7 @@ function App() {
             <span className="title-emoji">🍙</span>
           </h1>
           <p className="main-subtitle">
-            단어를 꼭꼭 씹어보세요!
+            필수 단어 500개를 꼭꼭 씹어보세요!
           </p>
 
           <div className="button-row">
