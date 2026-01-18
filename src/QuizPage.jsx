@@ -144,7 +144,7 @@ function QuizPage({ quizWords, onComplete }) {
   }
 
   const handleAnswerSelect = (option) => {
-    // 정답 화면에서 정답이 아닌 보기를 클릭한 경우
+    // 정답 화면에서 보기를 클릭한 경우
     if (hasAnswered) {
       const isCorrect = option.romaji === currentQuiz.romaji
       if (!isCorrect) {
@@ -154,10 +154,9 @@ function QuizPage({ quizWords, onComplete }) {
           // 아직 뒤집히지 않은 경우에만 뒤집기
           setFlippedOptions(prev => new Set([...prev, option.romaji]))
         }
-        
-        // 뒤집힌 상태에서 클릭해도 발음 재생
-        speakText(option.hiragana)
       }
+      // 정답이든 아니든 클릭하면 발음 재생
+      speakText(option.hiragana)
       return
     }
 
@@ -682,7 +681,7 @@ function QuizPage({ quizWords, onComplete }) {
               const isCorrect = option.romaji === currentQuiz.romaji
               const isWrong = wrongAnswers.includes(option.romaji)
               const isSelected = hasAnswered && selectedAnswer === option.romaji
-              const isFlipped = hasAnswered && flippedOptions.has(option.romaji) && !isCorrect
+              const isFlipped = hasAnswered && (isCorrect || flippedOptions.has(option.romaji))
 
               let buttonClass = 'option-button'
               if (hasAnswered) {
@@ -708,7 +707,7 @@ function QuizPage({ quizWords, onComplete }) {
                         {option.hiragana}
                       </button>
                     </div>
-                    <div className="option-card-back" onClick={() => hasAnswered && !isCorrect && speakText(option.hiragana)} style={{ cursor: hasAnswered && !isCorrect ? 'pointer' : 'default' }}>
+                    <div className="option-card-back" onClick={() => hasAnswered && speakText(option.hiragana)} style={{ cursor: hasAnswered ? 'pointer' : 'default' }}>
                       <div className="option-word-info-content">
                         {option.kanji && <div className="option-word-kanji">{option.kanji}</div>}
                         <div className="option-word-hiragana">{option.hiragana}</div>

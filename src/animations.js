@@ -164,7 +164,7 @@ export const animations = [
         english: 'further, more, additionally',
         partOfSpeech: 'adverb',
         example: 'さらに向こうへ！PLUS ULTRA！',
-        exampleRuby: [{ 'さらに': 'さらに' }, { '向': 'む' }],
+        exampleRuby: [{ '向': 'む' }],
         exampleKorean: '좀 더 먼 곳으로! PLUS ULTRA!',
         exampleHiragana: 'さらにむこうへ！PLUS ULTRA！'
       }
