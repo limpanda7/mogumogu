@@ -3766,7 +3766,7 @@ export const vocabulary = [
     kanji: '暇',
     hiragana: 'ひま',
     romaji: 'hima',
-    korean: '자유 시간',
+    korean: '한가함',
     english: 'free time',
     partOfSpeech: 'noun',
     example: '暇な時',
