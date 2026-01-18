@@ -4276,7 +4276,7 @@ export const vocabulary = [
     english: 'to turn',
     partOfSpeech: 'verb',
     example: '右に曲がる',
-    exampleRuby: [{ 右: 'みぎ' }, { 曲: 'まが' }],
+    exampleRuby: [{ 右: 'みぎ' }, { 曲: 'ま' }],
     exampleKorean: '오른쪽으로 돌다'
   },
   {
