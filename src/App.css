@@ -454,7 +454,6 @@
 
 .option-card-back.correct {
   border-color: #28a745;
-  background: #d4edda;
 }
 
 .dont-know-button {
@@ -487,14 +486,6 @@
 
 .option-button:disabled {
   cursor: not-allowed;
-}
-
-.option-button.correct {
-  border-color: #28a745;
-  background: #d4edda;
-  color: #155724;
-  font-weight: 700;
-  transition: all 0.3s;
 }
 
 .option-button.incorrect {
