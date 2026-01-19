@@ -5477,6 +5477,28 @@ export const vocabulary = [
     example: 'どうやって駅へ行きますか。',
     exampleRuby: [{ 駅: 'えき' }, { 行: 'い' }],
     exampleKorean: '어떻게 역에 갑니까?'
+  },
+  {
+    kanji: '学校',
+    hiragana: 'がっこう',
+    romaji: 'gakkou',
+    korean: '학교',
+    english: 'school',
+    partOfSpeech: 'noun',
+    example: '学校に行く',
+    exampleRuby: [{ 学校: 'がっこう' }, { 行: 'い' }],
+    exampleKorean: '학교에 가다'
+  },
+  {
+    kanji: '学生',
+    hiragana: 'がくせい',
+    romaji: 'gakusei',
+    korean: '학생',
+    english: 'student',
+    partOfSpeech: 'noun',
+    example: '私は学生です。',
+    exampleRuby: [{ 私: 'わたし' }, { 学生: 'がくせい' }],
+    exampleKorean: '저는 학생입니다.'
   }
 ]
 
