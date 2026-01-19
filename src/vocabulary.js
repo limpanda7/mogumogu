@@ -2773,17 +2773,6 @@ export const vocabulary = [
     exampleKorean: '어디에 갑니까?'
   },
   {
-    kanji: '年',
-    hiragana: 'とし',
-    romaji: 'toshi',
-    korean: '년',
-    english: 'year',
-    partOfSpeech: 'noun',
-    example: '今年',
-    exampleRuby: [{ 今: 'こと' }, { 年: 'とし' }],
-    exampleKorean: '올해'
-  },
-  {
     kanji: '図書館',
     hiragana: 'としょかん',
     romaji: 'toshokan',

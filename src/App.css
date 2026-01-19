@@ -351,62 +351,6 @@
   margin-bottom: 20px;
 }
 
-.option-hint-bubble {
-  background: #fff3cd;
-  border: 2px solid #ffc107;
-  border-radius: 12px;
-  padding: 10px 40px 10px 15px;
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: #856404;
-  text-align: center;
-  animation: fadeIn 0.3s ease-in;
-  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
-  position: relative;
-}
-
-.option-hint-bubble span {
-  display: block;
-  text-align: center;
-}
-
-.option-hint-close {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  color: #856404;
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.option-hint-close:hover {
-  background: rgba(133, 100, 4, 0.1);
-  color: #5a4203;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .options-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1243,14 +1187,8 @@ button {
 }
 
 .animation-title-name {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
-  color: #666;
-}
-
-.animation-title-japanese {
-  font-size: 14px;
-  font-weight: 700;
   color: #666;
 }
 

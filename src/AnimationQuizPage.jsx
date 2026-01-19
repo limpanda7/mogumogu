@@ -11,11 +11,6 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
   const [wrongAnswers, setWrongAnswers] = useState([])
   const [hasAnswered, setHasAnswered] = useState(false)
   const [flippedOptions, setFlippedOptions] = useState(new Set()) // 정답 화면에서 뒤집힌 보기들
-  // 보기 힌트 말풍선 표시 여부 - 초기값은 로컬스토리지 확인 결과
-  const [showOptionHint, setShowOptionHint] = useState(() => {
-    const hintDismissed = localStorage.getItem('mogumogu_option_hint_dismissed')
-    return !hintDismissed // 값이 없으면 true (표시), 있으면 false (숨김)
-  })
   const speechSynthesisHandlerRef = useRef(null)
   const questionStartTimeRef = useRef(Date.now()) // 문제 시작 시간
   const preloadedAudioRef = useRef(null) // 미리 로드된 오디오
@@ -118,7 +113,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
 
     // 현재 문제의 발음 미리 로드
     if (currentQuiz) {
-      preloadAudio(currentQuiz.exampleHiragana || currentQuiz.example)
+      preloadAudio(currentQuiz.example)
     }
   }, [currentIndex, currentQuiz])
 
@@ -162,7 +157,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
       setHasAnswered(true)
 
       // TTS로 예문 읽기
-      speakText(currentQuiz.exampleHiragana || currentQuiz.example)
+      speakText(currentQuiz.example)
     } else {
       // 오답인 경우 빨간색 표시만 하고 계속 선택 가능하게
       if (!wrongAnswers.includes(option.romaji)) {
@@ -179,7 +174,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
     setHasAnswered(true)
 
     // TTS로 예문 읽기
-    speakText(currentQuiz.exampleHiragana || currentQuiz.example)
+    speakText(currentQuiz.example)
   }
 
   // 발음 미리 로드 함수
@@ -578,9 +573,6 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
           <div className="animation-title-header">
             <div className="animation-title-row">
               <div className="animation-title-name">{animationName}</div>
-              {animationNameJapanese && (
-                <div className="animation-title-japanese">{animationNameJapanese}</div>
-              )}
             </div>
           </div>
         )}
@@ -588,7 +580,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
         <div className="example-section">
           {hasAnswered && (
             <button
-              onClick={() => speakText(currentQuiz.exampleHiragana || currentQuiz.example)}
+              onClick={() => speakText(currentQuiz.example)}
               className="speaker-icon-button"
               aria-label="예문 발음 듣기"
             >
@@ -607,21 +599,6 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
         </div>
 
         <div className="options-section">
-          {hasAnswered && showOptionHint && (
-            <div className="option-hint-bubble">
-              <span>💡 정답 외 보기를 누르면 뜻이 나와요</span>
-              <button
-                className="option-hint-close"
-                onClick={() => {
-                  localStorage.setItem('mogumogu_option_hint_dismissed', 'true')
-                  setShowOptionHint(false)
-                }}
-                aria-label="닫기"
-              >
-                ×
-              </button>
-            </div>
-          )}
           <div className="options-container">
             {options.map((option, index) => {
               const isCorrect = option.romaji === currentQuiz.romaji
