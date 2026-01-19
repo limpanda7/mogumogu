@@ -5431,7 +5431,7 @@ export const vocabulary = [
     english: 'when',
     partOfSpeech: 'noun',
     example: '学生の時、日本へ行きました。',
-    exampleRuby: [{ 学生: 'がくせい' }, { 日本: 'にほん' }, { 行: 'い' }],
+    exampleRuby: [{ 学生: 'がくせい' }, { 時: 'とき' }, { 日本: 'にほん' }, { 行: 'い' }],
     exampleKorean: '학생 때 일본에 갔다.'
   },
   {

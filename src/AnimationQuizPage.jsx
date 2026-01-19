@@ -632,8 +632,61 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
                     </div>
                     <div className={`option-card-back ${hasAnswered && isCorrect ? 'correct' : ''}`} onClick={() => hasAnswered && speakText(option.hiragana)} style={{ cursor: hasAnswered ? 'pointer' : 'default' }}>
                       <div className="option-word-info-content">
-                        {option.kanji && <div className="option-word-kanji">{option.kanji}</div>}
-                        <div className="option-word-hiragana">{option.hiragana}</div>
+                        {option.kanji ? (() => {
+                          // 예문과 동일한 로직 사용: option.kanji 문자열을 순회하면서 exampleRuby에 있는 한자에 루비 적용
+                          const result = []
+                          let index = 0
+
+                          // exampleRuby 배열을 맵으로 변환하여 빠른 검색 가능하게 함
+                          const rubyMap = new Map()
+                          if (Array.isArray(option.exampleRuby)) {
+                            option.exampleRuby.forEach(rubyObj => {
+                              Object.entries(rubyObj).forEach(([kanjiText, hiraganaText]) => {
+                                rubyMap.set(kanjiText, hiraganaText)
+                              })
+                            })
+                          }
+
+                          while (index < option.kanji.length) {
+                            let matched = false
+
+                            // exampleRuby에서 가장 긴 한자부터 매칭 시도 (긴 한자가 우선)
+                            const sortedRubyEntries = Array.from(rubyMap.entries()).sort((a, b) => b[0].length - a[0].length)
+
+                            for (const [kanjiText, hiraganaText] of sortedRubyEntries) {
+                              if (option.kanji.substring(index).startsWith(kanjiText)) {
+                                // 루비 태그 추가
+                                result.push(
+                                  <ruby key={index}>
+                                    {kanjiText}
+                                    <rt>{hiraganaText}</rt>
+                                  </ruby>
+                                )
+
+                                index += kanjiText.length
+                                matched = true
+                                break
+                              }
+                            }
+
+                            if (!matched) {
+                              // 한자가 아닌 문자 처리
+                              const char = option.kanji[index]
+                              result.push(
+                                <span key={index}>{char}</span>
+                              )
+                              index++
+                            }
+                          }
+
+                          return (
+                            <span className="option-word-japanese">
+                              {result}
+                            </span>
+                          )
+                        })() : (
+                          <div className="option-word-hiragana">{option.hiragana}</div>
+                        )}
                         <div className="option-word-korean">{option.korean}</div>
                       </div>
                     </div>

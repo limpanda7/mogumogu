@@ -415,7 +415,7 @@
 .option-button {
   width: 100%;
   padding: 18px 20px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
@@ -442,8 +442,23 @@
 
 .option-word-info-content {
   display: flex;
-  gap: 10px;
+  flex-direction: row;
+  gap: 20px;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.option-word-japanese {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 20px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.option-word-japanese rt {
+  font-size: 0.8em;
 }
 
 .option-word-kanji {
@@ -457,6 +472,15 @@
   font-size: 16px;
   color: #666;
   line-height: 1.2;
+  text-align: left;
+}
+
+.option-word-hiragana-inline {
+  font-size: 20px;
+  color: #333;
+  line-height: 1.4;
+  display: inline;
+  font-weight: 400;
 }
 
 .option-word-korean {
@@ -464,6 +488,8 @@
   font-weight: 600;
   color: #ff9a56;
   line-height: 1.2;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .input-wrapper {
