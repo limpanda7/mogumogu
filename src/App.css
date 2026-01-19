@@ -180,7 +180,7 @@
 
 .example-section {
   margin-bottom: 20px;
-  padding: 20px;
+  padding: 20px 30px 20px 20px;
   background: #f8f9fa;
   border-radius: 12px;
   position: relative;
@@ -1178,7 +1178,7 @@ button {
 .animation-name-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .animation-name-japanese {
@@ -1200,8 +1200,8 @@ button {
 }
 
 .animation-title-header {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
   border-bottom: 2px solid #f0f0f0;
 }
 

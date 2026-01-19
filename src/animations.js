@@ -98,7 +98,7 @@ export const animations = [
   {
     id: 'my-hero-academia',
     name: '나의 히어로 아카데미아',
-    nameJapanese: '僕のヒーローアカデミア',
+    nameJapanese: 'ヒーローアカ',
     words: [
       {
         kanji: '君',
