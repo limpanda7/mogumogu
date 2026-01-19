@@ -187,6 +187,58 @@ function CompletedWordsPage({ onBack }) {
     }
   }
 
+  // 단어의 한자에 루비를 추가하는 함수 (예문/보기와 동일한 로직)
+  const addRubyToWord = (kanji, exampleRuby) => {
+    if (!kanji) return null
+
+    const result = []
+    let index = 0
+
+    // exampleRuby 배열을 맵으로 변환하여 빠른 검색 가능하게 함
+    const rubyMap = new Map()
+    if (Array.isArray(exampleRuby)) {
+      exampleRuby.forEach(rubyObj => {
+        Object.entries(rubyObj).forEach(([kanjiText, hiraganaText]) => {
+          rubyMap.set(kanjiText, hiraganaText)
+        })
+      })
+    }
+
+    while (index < kanji.length) {
+      let matched = false
+
+      // exampleRuby에서 가장 긴 한자부터 매칭 시도 (긴 한자가 우선)
+      const sortedRubyEntries = Array.from(rubyMap.entries()).sort((a, b) => b[0].length - a[0].length)
+
+      for (const [kanjiText, hiraganaText] of sortedRubyEntries) {
+        if (kanji.substring(index).startsWith(kanjiText)) {
+          // 루비 태그 추가
+          result.push(
+            <ruby key={index}>
+              {kanjiText}
+              <rt>{hiraganaText}</rt>
+            </ruby>
+          )
+
+          index += kanjiText.length
+          matched = true
+          break
+        }
+      }
+
+      if (!matched) {
+        // 한자가 아닌 문자 처리
+        const char = kanji[index]
+        result.push(
+          <span key={index}>{char}</span>
+        )
+        index++
+      }
+    }
+
+    return <>{result}</>
+  }
+
   return (
     <div className="app">
       <div className="main-container page-enter">
@@ -225,10 +277,13 @@ function CompletedWordsPage({ onBack }) {
                             <div className="word-card-kanji">{word.kanji || word.hiragana}</div>
                           </div>
                           <div className="word-card-back">
-                            <div className="word-card-kanji">{word.kanji || word.hiragana}</div>
-                            {word.kanji && (
-                              <div className="word-card-romaji">{word.hiragana}</div>
-                            )}
+                            <div className="word-card-kanji">
+                              {word.kanji ? (
+                                addRubyToWord(word.kanji, word.exampleRuby) || word.kanji
+                              ) : (
+                                word.hiragana
+                              )}
+                            </div>
                             <div className="word-card-korean">{word.korean}</div>
                           </div>
                         </div>
