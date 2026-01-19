@@ -271,7 +271,7 @@ export const vocabulary = [
     korean: '당신',
     english: 'you',
     partOfSpeech: 'pronoun',
-    example: 'あなたは誰ですか',
+    example: '貴方は誰ですか',
     exampleRuby: [{ 誰: 'だれ' }],
     exampleKorean: '당신은 누구입니까'
   },
@@ -2691,7 +2691,7 @@ export const vocabulary = [
     korean: '왜',
     english: 'for what reason',
     partOfSpeech: 'adverb',
-    example: 'どうして 学校へ 行きますか。',
+    example: 'どうして学校へ行きますか。',
     exampleRuby: [{ 学校: 'がっこう' }, { 行: 'い' }],
     exampleKorean: '왜 학교에 갑니까?'
   },
@@ -2746,7 +2746,7 @@ export const vocabulary = [
     korean: '가끔',
     english: 'sometimes',
     partOfSpeech: 'adverb',
-    example: 'ときどき コーヒーを 飲みます。',
+    example: '時々コーヒーを飲みます。',
     exampleRuby: [{ 飲: 'の' }],
     exampleKorean: '가끔 커피를 마신다.'
   },
@@ -2768,9 +2768,9 @@ export const vocabulary = [
     korean: '어디',
     english: 'where',
     partOfSpeech: 'pronoun',
-    example: 'どこに行く',
+    example: 'どこに行きますか',
     exampleRuby: [{ 行: 'い' }],
-    exampleKorean: '어디에 가다'
+    exampleKorean: '어디에 갑니까?'
   },
   {
     kanji: '年',
@@ -4616,7 +4616,7 @@ export const vocabulary = [
     korean: '벌써',
     english: 'already',
     partOfSpeech: 'adverb',
-    example: 'もう ご飯を 食べました。',
+    example: 'もうご飯を食べました。',
     exampleRuby: [{ ご飯: 'ごはん' }, { 食べ: 'たべ' }],
     exampleKorean: '이미 밥을 먹었습니다.'
   },
@@ -5441,7 +5441,7 @@ export const vocabulary = [
     korean: '때',
     english: 'when',
     partOfSpeech: 'noun',
-    example: '学生のとき、日本へ行きました。',
+    example: '学生の時、日本へ行きました。',
     exampleRuby: [{ 学生: 'がくせい' }, { 日本: 'にほん' }, { 行: 'い' }],
     exampleKorean: '학생 때 일본에 갔다.'
   },
@@ -5463,7 +5463,7 @@ export const vocabulary = [
     korean: '조금',
     english: 'a little',
     partOfSpeech: 'adverb',
-    example: '日本語がすこし分かります。',
+    example: '日本語が少し分かります。',
     exampleRuby: [{ 日本語: 'にほんご' }, { 分: 'わ' }],
     exampleKorean: '일본어를 조금 안다.'
   },
