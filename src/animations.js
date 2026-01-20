@@ -140,8 +140,8 @@ export const animations = [
         korean: '생각하다',
         english: 'to think',
         partOfSpeech: 'verb',
-        example: '人は何時死ぬと思う',
-        exampleRuby: [{ '人': 'ひと' }, { '何': 'なに' }, { '時': 'とき' }, { '死': 'し' }, { '思': 'おも' }],
+        example: '人はいつ死ぬと思う?',
+        exampleRuby: [{ '人': 'ひと' }, { '死': 'し' }, { '思': 'おも' }],
         exampleKorean: '사람이 언제 죽는다고 생각하나?'
       },
       {
