@@ -43,22 +43,22 @@ function App() {
       // 1. User-Agent 확인 (앱 이름이나 웹뷰 관련 문자열 포함 여부)
       const userAgent = navigator.userAgent || navigator.vendor || window.opera
       const isWebViewUA = /wv|WebView|Android.*wv|iPhone.*Mobile.*Safari/i.test(userAgent)
-      
+
       // 2. 웹뷰 전용 객체 확인
       const hasReactNativeWebView = typeof window.ReactNativeWebView !== 'undefined'
-      const hasWebkitMessageHandlers = typeof window.webkit !== 'undefined' && 
+      const hasWebkitMessageHandlers = typeof window.webkit !== 'undefined' &&
                                        typeof window.webkit.messageHandlers !== 'undefined'
       const hasAndroidBridge = typeof window.Android !== 'undefined'
-      
+
       // 3. PWA/Standalone 모드 확인
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches
       const isIOSStandalone = window.navigator.standalone === true
-      
+
       // 앱 내부에서 실행 중인 경우
-      return isWebViewUA || hasReactNativeWebView || hasWebkitMessageHandlers || 
+      return isWebViewUA || hasReactNativeWebView || hasWebkitMessageHandlers ||
              hasAndroidBridge || isStandalone || isIOSStandalone
     })()
-    
+
     // 앱이 아닌 경우에만 웹으로 간주
     setIsWeb(!isInApp)
   }, [])
@@ -239,7 +239,7 @@ function App() {
             </button>
           </div>
           <button onClick={handleShowAnimationSelect} className="animation-button" style={{ marginTop: '10px' }}>
-            🎬 애니메이션 대사 학습
+            🎬 애니메이션 명대사
           </button>
           <button onClick={handleShowSettings} className="settings-button-bottom">
             ⚙️ 설정

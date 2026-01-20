@@ -14,7 +14,7 @@ function AnimationSelectPage({ onBack, onSelectAnimation }) {
               <span className="chevron-icon"></span>
             </button>
             <h1 className="main-title" style={{ flex: 1, textAlign: 'center', margin: 0 }}>
-              애니메이션 대사 학습
+              애니메이션 명대사
             </h1>
             <div style={{ width: '40px' }}></div>
           </div>

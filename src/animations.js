@@ -1,4 +1,4 @@
-// 애니메이션 대사 데이터
+// 애니메이션 명대사 데이터
 export const animations = [
   {
     id: 'slam-dunk',
