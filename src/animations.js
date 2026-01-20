@@ -123,8 +123,8 @@ export const animations = [
         exampleKorean: '너, 내 동료가 되라'
       },
       {
-        kanji: 'かかった',
-        hiragana: 'かかった',
+        kanji: 'なかった',
+        hiragana: 'なかった',
         romaji: 'nakatta',
         korean: '없었다',
         english: 'was not, did not exist',
