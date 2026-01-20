@@ -228,14 +228,14 @@ function App() {
         </div>
       </div>
       {isWeb && (
-        <a 
-          href="https://play.google.com/store/apps/details?id=com.mogumoguapp" 
-          target="_blank" 
+        <a
+          href="https://play.google.com/store/apps/details?id=com.mogumoguapp"
+          target="_blank"
           rel="noopener noreferrer"
           className="app-install-banner"
         >
           <img src={mogumoguIcon} alt="모구모구 아이콘" className="app-install-icon" />
-          <span className="app-install-text">모구모구 앱을 설치해보세요! (안드로이드)</span>
+          <span className="app-install-text">모구모구 앱으로 공부하기 (안드로이드)</span>
         </a>
       )}
     </div>
