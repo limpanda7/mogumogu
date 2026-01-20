@@ -134,17 +134,6 @@ export const animations = [
         exampleKorean: '이것은 내가 최고의 히어로가 되기까지의 이야기다'
       },
       {
-        kanji: '顔',
-        hiragana: 'かお',
-        romaji: 'kao',
-        korean: '얼굴',
-        english: 'face',
-        partOfSpeech: 'noun',
-        example: '君が助けを求める顔してた',
-        exampleRuby: [{ '君': 'きみ' }, { '助': 'たす' }, { '求': 'もと' }, { '顔': 'かお' }],
-        exampleKorean: '네가 도움을 구하는 얼굴을 했어'
-      },
-      {
         kanji: '',
         hiragana: 'さらに',
         romaji: 'sarani',
@@ -154,15 +143,18 @@ export const animations = [
         example: 'さらに向こうへ！PLUS ULTRA！',
         exampleRuby: [{ '向': 'む' }],
         exampleKorean: '좀 더 먼 곳으로! PLUS ULTRA!'
+      },
+      {
+        kanji: '来た',
+        hiragana: 'きた',
+        romaji: 'kita',
+        korean: '왔다',
+        english: 'came',
+        partOfSpeech: 'verb',
+        example: '私が来た！',
+        exampleRuby: [{ 私: 'わたし' }, { 来: 'き' }],
+        exampleKorean: '내가 왔다!'
       }
-    ]
-  },
-  {
-    id: 'frieren',
-    name: '장송의 프리렌',
-    nameJapanese: '葬送のフリーレン',
-    words: [
-      // 나중에 추가될 예정
     ]
   }
 ]
