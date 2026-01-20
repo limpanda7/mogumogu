@@ -123,9 +123,9 @@ export const animations = [
         exampleKorean: '너, 내 동료가 되라'
       },
       {
-        kanji: 'かった',
-        hiragana: 'かった',
-        romaji: 'katta',
+        kanji: 'かかった',
+        hiragana: 'かかった',
+        romaji: 'nakatta',
         korean: '없었다',
         english: 'was not, did not exist',
         partOfSpeech: 'verb',
@@ -152,7 +152,7 @@ export const animations = [
         english: 'dream',
         partOfSpeech: 'noun',
         example: '人の夢は！終わらねェ！',
-        exampleRuby: [{ '人': 'ひと' }, { '夢': 'ゆめ' }, { '終': 'おわ' }],
+        exampleRuby: [{ '人': 'ひと' }, { '夢': 'ゆめ' }, { '終': 'お' }],
         exampleKorean: '사람의 꿈은! 끝나지 않아!'
       }
     ]
