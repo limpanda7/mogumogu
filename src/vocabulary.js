@@ -446,7 +446,7 @@ export const vocabulary = [
     romaji: 'iie',
     korean: '아니오',
     english: 'no',
-    partOfSpeech: 'interjection',
+    partOfSpeech: 'conjunction',
     example: 'いいえ、違います',
     exampleRuby: [{ 違: 'ちが' }],
     exampleKorean: '아니오, 틀렸습니다'
@@ -908,7 +908,7 @@ export const vocabulary = [
     romaji: 'ee',
     korean: '예',
     english: 'yes',
-    partOfSpeech: 'interjection',
+    partOfSpeech: 'conjunction',
     example: 'ええ、そうです',
     exampleRuby: [],
     exampleKorean: '예, 그렇습니다'
@@ -2710,9 +2710,9 @@ export const vocabulary = [
     kanji: '',
     hiragana: 'どうも',
     romaji: 'doumo',
-    korean: '감사합니다',
-    english: 'thanks',
-    partOfSpeech: 'interjection',
+    korean: '정말로',
+    english: 'very; really',
+    partOfSpeech: 'adverb',
     example: 'どうもありがとう',
     exampleRuby: [],
     exampleKorean: '정말 감사합니다'
@@ -2996,9 +2996,9 @@ export const vocabulary = [
     kanji: '',
     hiragana: 'など',
     romaji: 'nado',
-    korean: '등',
+    korean: '~등',
     english: 'et cetera',
-    partOfSpeech: 'particle',
+    partOfSpeech: 'adverb',
     example: 'りんごなど',
     exampleRuby: [],
     exampleKorean: '사과 등'
@@ -3284,7 +3284,7 @@ export const vocabulary = [
     romaji: 'hai',
     korean: '예',
     english: 'yes',
-    partOfSpeech: 'interjection',
+    partOfSpeech: 'conjunction',
     example: 'はい、そうです',
     exampleRuby: [],
     exampleKorean: '예, 그렇습니다'
@@ -5385,7 +5385,7 @@ export const vocabulary = [
     romaji: 'kono',
     korean: '이',
     english: 'this',
-    partOfSpeech: 'demonstrative',
+    partOfSpeech: 'pronoun',
     example: 'この本はおもしろいです。',
     exampleRuby: [{ 本: 'ほん' }],
     exampleKorean: '이 책은 재미있습니다.'
@@ -5396,7 +5396,7 @@ export const vocabulary = [
     romaji: 'ano',
     korean: '저',
     english: 'that',
-    partOfSpeech: 'demonstrative',
+    partOfSpeech: 'pronoun',
     example: 'あの店は有名です。',
     exampleRuby: [{ 店: 'みせ' }, { 有名: 'ゆうめい' }],
     exampleKorean: '저 가게는 유명합니다.'
@@ -5407,7 +5407,7 @@ export const vocabulary = [
     romaji: 'sono',
     korean: '그',
     english: 'that',
-    partOfSpeech: 'demonstrative',
+    partOfSpeech: 'pronoun',
     example: 'そのかばんはだれのですか。',
     exampleRuby: [{ だれ: 'だれ' }],
     exampleKorean: '그 가방은 누구의 것입니까?'
@@ -5440,7 +5440,7 @@ export const vocabulary = [
     romaji: 'kara',
     korean: '~해서 / ~이기 때문에',
     english: 'because',
-    partOfSpeech: 'particle',
+    partOfSpeech: 'conjunction',
     example: '雨ですから、行きません。',
     exampleRuby: [{ 雨: 'あめ' }, { 行: 'い' }],
     exampleKorean: '비가 와서 가지 않는다.'

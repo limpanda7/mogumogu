@@ -66,7 +66,7 @@ export const animations = [
         romaji: 'kara',
         korean: '~이기 때문에',
         english: 'because',
-        partOfSpeech: 'particle',
+        partOfSpeech: 'conjunction',
         example: '天才ですから',
         exampleRuby: [],
         exampleKorean: '천재니까요'
@@ -81,17 +81,6 @@ export const animations = [
         example: '必ず勝利する!',
         exampleRuby: [{ '必': 'かなら' }, { '勝利': 'しょうり' }],
         exampleKorean: '반드시 승리한다!'
-      },
-      {
-        kanji: '添える',
-        hiragana: 'そえる',
-        romaji: 'soeru',
-        korean: '곁들이다, 거들다',
-        english: 'to accompany',
-        partOfSpeech: 'verb',
-        example: '左手は 添えるだけ',
-        exampleRuby: [{ '左手': 'ひだりて' }, { '添': 'そ' }],
-        exampleKorean: '왼손은 거들 뿐'
       }
     ]
   },
