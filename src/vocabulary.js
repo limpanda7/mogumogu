@@ -2369,12 +2369,12 @@ export const vocabulary = [
     kanji: '疲れる',
     hiragana: 'つかれる',
     romaji: 'tsukareru',
-    korean: '피곤',
+    korean: '피곤하다',
     english: 'to get tired',
     partOfSpeech: 'verb',
-    example: '疲れた',
-    exampleRuby: [{ 疲: 'つか' }],
-    exampleKorean: '피곤하다'
+    example: 'たくさん歩くと疲れる',
+    exampleRuby: [{ 歩: 'ある' }, { 疲: 'つか' }],
+    exampleKorean: '많이 걸으면 피곤해진다'
   },
   {
     kanji: '次',
