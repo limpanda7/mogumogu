@@ -96,6 +96,68 @@ export const animations = [
     ]
   },
   {
+    id: 'one-piece',
+    name: '원피스',
+    nameJapanese: 'ワンピース',
+    words: [
+      {
+        kanji: '遅い',
+        hiragana: 'おそい',
+        romaji: 'osoi',
+        korean: '느린',
+        english: 'slow',
+        partOfSpeech: 'adjective',
+        example: '遅い',
+        exampleRuby: [{ '遅': 'おそ' }],
+        exampleKorean: '느려.'
+      },
+      {
+        kanji: '仲間',
+        hiragana: 'なかま',
+        romaji: 'nakama',
+        korean: '동료',
+        english: 'comrade, friend',
+        partOfSpeech: 'noun',
+        example: 'おまえ、おれの仲間になれ',
+        exampleRuby: [{ '仲間': 'なかま' }],
+        exampleKorean: '너, 내 동료가 되라'
+      },
+      {
+        kanji: 'かった',
+        hiragana: 'かった',
+        romaji: 'katta',
+        korean: '없었다',
+        english: 'was not, did not exist',
+        partOfSpeech: 'verb',
+        example: '何もなかった!',
+        exampleRuby: [{ '何': 'なに' }],
+        exampleKorean: '아무일도 없었다!'
+      },
+      {
+        kanji: '思う',
+        hiragana: 'おもう',
+        romaji: 'omou',
+        korean: '생각하다',
+        english: 'to think',
+        partOfSpeech: 'verb',
+        example: '人は何時死ぬと思う',
+        exampleRuby: [{ '人': 'ひと' }, { '何': 'なに' }, { '時': 'とき' }, { '死': 'し' }, { '思': 'おも' }],
+        exampleKorean: '사람이 언제 죽는다고 생각하나?'
+      },
+      {
+        kanji: '夢',
+        hiragana: 'ゆめ',
+        romaji: 'yume',
+        korean: '꿈',
+        english: 'dream',
+        partOfSpeech: 'noun',
+        example: '人の夢は！終わらねェ！',
+        exampleRuby: [{ '人': 'ひと' }, { '夢': 'ゆめ' }, { '終': 'おわ' }],
+        exampleKorean: '사람의 꿈은! 끝나지 않아!'
+      }
+    ]
+  },
+  {
     id: 'my-hero-academia',
     name: '나의 히어로 아카데미아',
     nameJapanese: 'ヒロアカ',
