@@ -873,12 +873,11 @@ button {
 
 .word-card-kanji {
   font-size: 24px;
-  font-weight: bold;
   color: #333;
 }
 
 .word-card-kanji rt {
-  font-size: 0.8em;
+  font-size: 0.7em;
 }
 
 .word-card-hiragana {

@@ -38,10 +38,29 @@ function App() {
 
   // 웹에서 실행된 경우 감지
   useEffect(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    const isIOSStandalone = window.navigator.standalone === true
-    // PWA나 iOS standalone이 아닌 경우 웹으로 간주
-    setIsWeb(!isStandalone && !isIOSStandalone)
+    // 앱(웹뷰) 환경 감지
+    const isInApp = (() => {
+      // 1. User-Agent 확인 (앱 이름이나 웹뷰 관련 문자열 포함 여부)
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera
+      const isWebViewUA = /wv|WebView|Android.*wv|iPhone.*Mobile.*Safari/i.test(userAgent)
+      
+      // 2. 웹뷰 전용 객체 확인
+      const hasReactNativeWebView = typeof window.ReactNativeWebView !== 'undefined'
+      const hasWebkitMessageHandlers = typeof window.webkit !== 'undefined' && 
+                                       typeof window.webkit.messageHandlers !== 'undefined'
+      const hasAndroidBridge = typeof window.Android !== 'undefined'
+      
+      // 3. PWA/Standalone 모드 확인
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      const isIOSStandalone = window.navigator.standalone === true
+      
+      // 앱 내부에서 실행 중인 경우
+      return isWebViewUA || hasReactNativeWebView || hasWebkitMessageHandlers || 
+             hasAndroidBridge || isStandalone || isIOSStandalone
+    })()
+    
+    // 앱이 아닌 경우에만 웹으로 간주
+    setIsWeb(!isInApp)
   }, [])
 
   // 로컬스토리지 변경 감지
