@@ -9,6 +9,7 @@ import AnimationSelectPage from './AnimationSelectPage'
 import AnimationQuizPage from './AnimationQuizPage'
 import { selectQuizWords } from './spacedRepetition'
 import LearnedWordsCounter from './LearnedWordsCounter'
+import mogumoguIcon from './assets/mogumogu_icon.png'
 
 // localStorage 키
 const STORAGE_KEYS = {
@@ -33,6 +34,15 @@ function App() {
   }
 
   const [quizCount, setQuizCount] = useState(getQuizCount)
+  const [isWeb, setIsWeb] = useState(false)
+
+  // 웹에서 실행된 경우 감지
+  useEffect(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    const isIOSStandalone = window.navigator.standalone === true
+    // PWA나 iOS standalone이 아닌 경우 웹으로 간주
+    setIsWeb(!isStandalone && !isIOSStandalone)
+  }, [])
 
   // 로컬스토리지 변경 감지
   useEffect(() => {
@@ -217,6 +227,17 @@ function App() {
           </button>
         </div>
       </div>
+      {isWeb && (
+        <a 
+          href="https://play.google.com/store/apps/details?id=com.mogumoguapp" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="app-install-banner"
+        >
+          <img src={mogumoguIcon} alt="모구모구 아이콘" className="app-install-icon" />
+          <span className="app-install-text">모구모구 앱을 설치해보세요! (안드로이드)</span>
+        </a>
+      )}
     </div>
   )
 }

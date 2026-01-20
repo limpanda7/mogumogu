@@ -699,7 +699,7 @@ button {
 .main-subtitle {
   font-size: 16px;
   color: #ff9a56;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   font-weight: 500;
 }
 
@@ -1244,4 +1244,49 @@ button {
 .learned-words-count {
   color: #ff6b35;
   font-weight: 700;
+}
+
+/* 앱 설치 유도 배너 */
+.app-install-banner {
+  position: fixed;
+  bottom: 15px;
+  left: 10px;
+  right: 10px;
+  width: auto;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 15px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: #333;
+  z-index: 1000;
+  transition: all 0.3s;
+}
+
+.app-install-banner:hover {
+  background: rgba(255, 248, 240, 0.9);
+  box-shadow: 0 -6px 25px rgba(255, 156, 86, 0.3);
+}
+
+.app-install-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+.app-install-text {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff8c42;
+  line-height: 1.4;
+  text-align: center;
 }
