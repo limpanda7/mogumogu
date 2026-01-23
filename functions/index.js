@@ -53,8 +53,13 @@ exports.synthesizeSpeech = functions.region('asia-northeast3').https.onCall(asyn
   }
 });
 
-// 이메일 전송 함수
-exports.sendFeedback = functions.region('asia-northeast3').https.onCall(async (data, context) => {
+// 이메일 전송 함수 (Secret Manager 사용 - v1 API)
+exports.sendFeedback = functions
+  .region('asia-northeast3')
+  .runWith({
+    secrets: ['EMAIL_USER', 'EMAIL_PASSWORD']
+  })
+  .https.onCall(async (data, context) => {
   try {
     const { title, content } = data;
 
@@ -62,13 +67,13 @@ exports.sendFeedback = functions.region('asia-northeast3').https.onCall(async (d
       throw new functions.https.HttpsError('invalid-argument', '제목과 내용을 모두 입력해주세요.');
     }
 
-    // Gmail SMTP 설정
-    // 환경 변수에서 이메일 계정 정보 가져오기
-    const emailUser = functions.config().email?.user || process.env.EMAIL_USER;
-    const emailPassword = functions.config().email?.password || process.env.EMAIL_PASSWORD;
+    // Secret Manager에서 이메일 계정 정보 가져오기 (환경 변수로 접근)
+    const emailUser = process.env.EMAIL_USER;
+    const emailPassword = process.env.EMAIL_PASSWORD;
 
     if (!emailUser || !emailPassword) {
-      throw new functions.https.HttpsError('failed-precondition', '이메일 설정이 완료되지 않았습니다.');
+      console.error('이메일 설정 오류: EMAIL_USER 또는 EMAIL_PASSWORD 시크릿이 설정되지 않았습니다.');
+      throw new functions.https.HttpsError('failed-precondition', '이메일 설정이 완료되지 않았습니다. 관리자에게 문의하세요.');
     }
 
     // Nodemailer transporter 생성
