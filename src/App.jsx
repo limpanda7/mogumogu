@@ -157,6 +157,11 @@ function App() {
     setSelectedAnimation(null)
   }
 
+  const handleBackFromAnimationQuiz = () => {
+    setShowAnimationQuiz(false)
+    setShowAnimationSelect(true)
+  }
+
   if (showQuiz) {
     return (
       <>
@@ -211,6 +216,7 @@ function App() {
           animationName={selectedAnimation.name}
           animationNameJapanese={selectedAnimation.nameJapanese}
           onComplete={handleAnimationQuizComplete}
+          onBack={handleBackFromAnimationQuiz}
         />
       </>
     )

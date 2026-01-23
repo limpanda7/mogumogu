@@ -3,7 +3,7 @@ import './App.css'
 import { vocabulary, shuffleArray } from './vocabulary'
 import { synthesizeSpeech } from './firebase'
 
-function AnimationQuizPage({ animationWords, animationName, animationNameJapanese, onComplete }) {
+function AnimationQuizPage({ animationWords, animationName, animationNameJapanese, onComplete, onBack }) {
   // 랜덤하게 섞인 단어 배열 생성
   const [quizData] = useState(() => shuffleArray([...animationWords]))
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -551,7 +551,7 @@ function AnimationQuizPage({ animationWords, animationName, animationNameJapanes
     <div className="app">
       <div className="quiz-container page-enter">
         <div className="top-header">
-          <button onClick={() => onComplete()} className="back-chevron-button">
+          <button onClick={onBack} className="back-chevron-button">
             <span className="chevron-icon"></span>
           </button>
           <div className="progress-container">
