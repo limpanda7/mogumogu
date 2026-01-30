@@ -265,13 +265,13 @@ export const vocabulary = [
     exampleKorean: '나중에 만나요'
   },
   {
-    kanji: '貴方',
+    kanji: '',
     hiragana: 'あなた',
     romaji: 'anata',
     korean: '당신',
     english: 'you',
     partOfSpeech: 'pronoun',
-    example: '貴方は誰ですか',
+    example: 'あなたは誰ですか',
     exampleRuby: [{ 誰: 'だれ' }],
     exampleKorean: '당신은 누구입니까'
   },
@@ -1907,12 +1907,12 @@ export const vocabulary = [
     kanji: '',
     hiragana: 'そうして',
     romaji: 'soushite',
-    korean: '그리고',
-    english: 'And',
+    korean: '그 결과',
+    english: 'then / thus',
     partOfSpeech: 'conjunction',
-    example: 'そうして始まった',
-    exampleRuby: [{ 始: 'はじ' }],
-    exampleKorean: '그렇게 해서 시작되었다'
+    example: '勉強した。そうして分かった。',
+    exampleRuby: [{ 勉強: 'べんきょう' }, { 分: 'わ' }],
+    exampleKorean: '공부했다. 그 결과 알게 되었다.'
   },
   {
     kanji: '',
@@ -2138,7 +2138,7 @@ export const vocabulary = [
     kanji: '楽しい',
     hiragana: 'たのしい',
     romaji: 'tanoshii',
-    korean: '재미',
+    korean: '재미있는',
     english: 'enjoyable',
     partOfSpeech: 'adjective',
     example: '楽しい時間',
@@ -2490,7 +2490,7 @@ export const vocabulary = [
     kanji: '出かける',
     hiragana: 'でかける',
     romaji: 'dekakeru',
-    korean: '외출',
+    korean: '나가다',
     english: 'to go out',
     partOfSpeech: 'verb',
     example: '買い物に出かける',
@@ -5068,7 +5068,7 @@ export const vocabulary = [
     english: 'to be understood',
     partOfSpeech: 'verb',
     example: '答えが分かる',
-    exampleRuby: [{ 答: 'こた' }, { 分: 'わか' }],
+    exampleRuby: [{ 答: 'こた' }, { 分: 'わ' }],
     exampleKorean: '답을 알다'
   },
   {
