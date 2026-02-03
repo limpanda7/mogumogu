@@ -1,4 +1,5 @@
 import { shuffleArray } from './vocabulary'
+import { isInWebView } from './utils/webView'
 
 const STORAGE_KEY = 'mogumogu_word_mastery'
 
@@ -135,8 +136,8 @@ export const saveWordMasteryData = (word, masteryData) => {
   const savedWordCount = Object.keys(allMasteryData).length
   console.log(`[Word Mastery] 저장된 단어 개수: ${savedWordCount}`)
 
-  // 단어 개수가 20개 이상일 때 앱 리뷰 모달 이벤트 발생
-  if (savedWordCount >= 20) {
+  // 단어 개수가 20개 이상이고 웹뷰일 때 앱 리뷰 모달 이벤트 발생
+  if (savedWordCount >= 20 && isInWebView()) {
     const event = new CustomEvent('showAppReviewModal', {
       detail: { wordCount: savedWordCount }
     })

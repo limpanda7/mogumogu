@@ -10,6 +10,7 @@ import AnimationQuizPage from './AnimationQuizPage'
 import { selectQuizWords } from './spacedRepetition'
 import LearnedWordsCounter from './LearnedWordsCounter'
 import AppReviewModal from './AppReviewModal'
+import { isInWebView } from './utils/webView'
 import mogumoguIcon from './assets/mogumogu_icon.png'
 
 // localStorage 키
@@ -40,29 +41,8 @@ function App() {
 
   // 웹에서 실행된 경우 감지
   useEffect(() => {
-    // 앱(웹뷰) 환경 감지
-    const isInApp = (() => {
-      // 1. User-Agent 확인 (앱 이름이나 웹뷰 관련 문자열 포함 여부)
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera
-      const isWebViewUA = /wv|WebView|Android.*wv|iPhone.*Mobile.*Safari/i.test(userAgent)
-
-      // 2. 웹뷰 전용 객체 확인
-      const hasReactNativeWebView = typeof window.ReactNativeWebView !== 'undefined'
-      const hasWebkitMessageHandlers = typeof window.webkit !== 'undefined' &&
-                                       typeof window.webkit.messageHandlers !== 'undefined'
-      const hasAndroidBridge = typeof window.Android !== 'undefined'
-
-      // 3. PWA/Standalone 모드 확인
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      const isIOSStandalone = window.navigator.standalone === true
-
-      // 앱 내부에서 실행 중인 경우
-      return isWebViewUA || hasReactNativeWebView || hasWebkitMessageHandlers ||
-             hasAndroidBridge || isStandalone || isIOSStandalone
-    })()
-
     // 앱이 아닌 경우에만 웹으로 간주
-    setIsWeb(!isInApp)
+    setIsWeb(!isInWebView())
   }, [])
 
   // 로컬스토리지 변경 감지
@@ -87,12 +67,8 @@ function App() {
       // 이미 모달을 표시했는지 확인 (localStorage에 플래그 저장)
       const hasShownModal = localStorage.getItem('mogumogu_app_review_shown')
       if (!hasShownModal) {
-        // 모달이 실제로 표시될 수 있는 상황인지 확인 (메인 페이지에 있을 때만)
-        const isMainPage = !showQuiz && !showResult && !showCompletedWords && 
-                           !showSettings && !showAnimationSelect && !showAnimationQuiz
-        if (isMainPage) {
-          setShowAppReviewModal(true)
-        }
+        // 어떤 페이지에서든 모달 표시 가능
+        setShowAppReviewModal(true)
       }
     }
 
@@ -101,7 +77,7 @@ function App() {
     return () => {
       window.removeEventListener('showAppReviewModal', handleShowAppReviewModal)
     }
-  }, [showQuiz, showResult, showCompletedWords, showSettings, showAnimationSelect, showAnimationQuiz])
+  }, [])
 
   // 메인 페이지로 돌아왔을 때 모달 표시 체크
   useEffect(() => {
@@ -112,13 +88,15 @@ function App() {
       // 이미 모달을 표시했는지 확인
       const hasShownModal = localStorage.getItem('mogumogu_app_review_shown')
       if (!hasShownModal) {
-        // 단어 개수 확인
-        const STORAGE_KEY = 'mogumogu_word_mastery'
-        const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
-        const savedWordCount = Object.keys(allMasteryData).length
-        
-        if (savedWordCount >= 2) {
-          setShowAppReviewModal(true)
+        // 단어 개수 확인 (웹뷰일 때만)
+        if (isInWebView()) {
+          const STORAGE_KEY = 'mogumogu_word_mastery'
+          const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+          const savedWordCount = Object.keys(allMasteryData).length
+          
+          if (savedWordCount >= 20) {
+            setShowAppReviewModal(true)
+          }
         }
       }
     }
@@ -219,11 +197,25 @@ function App() {
     localStorage.setItem('mogumogu_app_review_shown', 'true')
   }
 
+  // 공통 모달 렌더링
+  const renderAppReviewModal = () => {
+    if (showAppReviewModal) {
+      return (
+        <AppReviewModal
+          onConfirm={handleAppReviewModalConfirm}
+          onCancel={handleAppReviewModalCancel}
+        />
+      )
+    }
+    return null
+  }
+
   if (showQuiz) {
     return (
       <>
         <LearnedWordsCounter />
         <QuizPage quizWords={quizWords} onComplete={handleQuizComplete} />
+        {renderAppReviewModal()}
       </>
     )
   }
@@ -233,6 +225,7 @@ function App() {
       <>
         <LearnedWordsCounter />
         <ResultPage quizWords={resultQuizWords} onBack={handleBackFromResult} />
+        {renderAppReviewModal()}
       </>
     )
   }
@@ -242,6 +235,7 @@ function App() {
       <>
         <LearnedWordsCounter />
         <CompletedWordsPage onBack={handleBackFromCompletedWords} />
+        {renderAppReviewModal()}
       </>
     )
   }
@@ -251,6 +245,7 @@ function App() {
       <>
         <LearnedWordsCounter />
         <SettingsPage onBack={handleBackFromSettings} />
+        {renderAppReviewModal()}
       </>
     )
   }
@@ -260,6 +255,7 @@ function App() {
       <>
         <LearnedWordsCounter />
         <AnimationSelectPage onBack={handleBackFromAnimationSelect} onSelectAnimation={handleSelectAnimation} />
+        {renderAppReviewModal()}
       </>
     )
   }
@@ -274,6 +270,7 @@ function App() {
           onComplete={handleAnimationQuizComplete}
           onBack={handleBackFromAnimationQuiz}
         />
+        {renderAppReviewModal()}
       </>
     )
   }
@@ -319,12 +316,7 @@ function App() {
           <span className="app-install-text">모구모구 앱으로 공부하기 (안드로이드)</span>
         </a>
       )}
-      {showAppReviewModal && (
-        <AppReviewModal
-          onConfirm={handleAppReviewModalConfirm}
-          onCancel={handleAppReviewModalCancel}
-        />
-      )}
+      {renderAppReviewModal()}
     </div>
   )
 }
