@@ -1,5 +1,3 @@
-// 에빙하우스 망각곡선 기반 간격 반복 알고리즘
-
 import { shuffleArray } from './vocabulary'
 
 const STORAGE_KEY = 'mogumogu_word_mastery'
@@ -132,6 +130,18 @@ export const saveWordMasteryData = (word, masteryData) => {
   const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
   allMasteryData[wordKey] = masteryData
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allMasteryData))
+
+  // localStorage에 저장된 word mastery의 단어 개수 체크
+  const savedWordCount = Object.keys(allMasteryData).length
+  console.log(`[Word Mastery] 저장된 단어 개수: ${savedWordCount}`)
+
+  // 단어 개수가 20개 이상일 때 앱 리뷰 모달 이벤트 발생
+  if (savedWordCount >= 20) {
+    const event = new CustomEvent('showAppReviewModal', {
+      detail: { wordCount: savedWordCount }
+    })
+    window.dispatchEvent(event)
+  }
 }
 
 // 정답 패턴에 따른 복습 간격 업데이트
@@ -338,7 +348,7 @@ export const formatNextReviewTime = (nextReviewTime) => {
 export const getReviewIntervalMessage = (interval) => {
   // 숫자 값인 경우 enum으로 변환
   const intervalType = typeof interval === 'string' ? interval : getIntervalType(interval)
-  
+
   if (intervalType === INTERVAL_TYPE.IMMEDIATE) {
     return '5분 뒤'
   } else if (intervalType === INTERVAL_TYPE.SHORT) {
@@ -444,7 +454,7 @@ export const getAllWordsByInterval = (vocabulary) => {
   return getIntervalGroupsForDisplay(vocabulary)
 }
 
-// 단어 숙련도 데이터 초기화 (테스트용)
+// 단어 숙련도 데이터 초기화
 export const resetMasteryData = () => {
   localStorage.removeItem(STORAGE_KEY)
 }
@@ -453,7 +463,7 @@ export const resetMasteryData = () => {
 export const getLearnedWordsCount = (vocabulary) => {
   const allMasteryData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
   let learnedCount = 0
-  
+
   vocabulary.forEach(word => {
     const wordKey = getWordKey(word)
     const masteryData = allMasteryData[wordKey] || getInitialMasteryData()
@@ -462,6 +472,6 @@ export const getLearnedWordsCount = (vocabulary) => {
       learnedCount++
     }
   })
-  
+
   return learnedCount
 }
