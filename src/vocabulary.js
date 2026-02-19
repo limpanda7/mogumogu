@@ -3216,7 +3216,7 @@ export const vocabulary = [
     kanji: '登る',
     hiragana: 'のぼる',
     romaji: 'noboru',
-    korean: '등반',
+    korean: '등반하다',
     english: 'to climb',
     partOfSpeech: 'verb',
     example: '山に登る',

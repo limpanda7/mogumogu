@@ -61,17 +61,6 @@ export const animations = [
         exampleKorean: '포기를 모르는 남자지'
       },
       {
-        kanji: '',
-        hiragana: 'から',
-        romaji: 'kara',
-        korean: '~이기 때문에',
-        english: 'because',
-        partOfSpeech: 'conjunction',
-        example: '天才ですから',
-        exampleRuby: [],
-        exampleKorean: '천재니까요'
-      },
-      {
         kanji: '必ず',
         hiragana: 'かならず',
         romaji: 'kanarazu',
@@ -133,17 +122,6 @@ export const animations = [
         exampleRuby: [{ '人': 'ひと' }, { '死': 'し' }, { '思': 'おも' }],
         exampleKorean: '사람이 언제 죽는다고 생각하나?'
       },
-      {
-        kanji: '夢',
-        hiragana: 'ゆめ',
-        romaji: 'yume',
-        korean: '꿈',
-        english: 'dream',
-        partOfSpeech: 'noun',
-        example: '人の夢は！終わらねェ！',
-        exampleRuby: [{ '人': 'ひと' }, { '夢': 'ゆめ' }, { '終': 'お' }],
-        exampleKorean: '사람의 꿈은! 끝나지 않아!'
-      }
     ]
   },
   {
@@ -172,17 +150,6 @@ export const animations = [
         example: '平和の象徴',
         exampleRuby: [{ '平和': 'へいわ' }, { '象徴': 'しょうちょう' }],
         exampleKorean: '평화의 상징'
-      },
-      {
-        kanji: '最高',
-        hiragana: 'さいこう',
-        romaji: 'saiko',
-        korean: '최고',
-        english: 'best',
-        partOfSpeech: 'noun',
-        example: 'これは俺が最高のヒーローになるまでの物語だ',
-        exampleRuby: [{ '俺': 'おれ' }, { '最': 'さい' }, { '高': 'こう' }, { '物語': 'ものがたり' }],
-        exampleKorean: '이것은 내가 최고의 히어로가 되기까지의 이야기다'
       },
       {
         kanji: '',
