@@ -3557,12 +3557,12 @@ export const vocabulary = [
     kanji: '晴れる',
     hiragana: 'はれる',
     romaji: 'hareru',
-    korean: '맑은',
-    english: 'to be sunny',
+    korean: '(날씨가) 개다',
+    english: 'to clear up',
     partOfSpeech: 'verb',
-    example: '晴れる日',
-    exampleRuby: [{ 晴: 'は' }, { 日: 'ひ' }],
-    exampleKorean: '맑은 날'
+    example: '明日は晴れる',
+    exampleRuby: [{ 明日: 'あした' }, { 晴: 'は' }],
+    exampleKorean: '내일은 날씨가 개겠다'
   },
   {
     kanji: '半',
