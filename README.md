@@ -1,16 +1,17 @@
-# React + Vite
+# 모구모구
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[https://mogumogu-jp.web.app/](https://mogumogu-jp.web.app/)
 
-Currently, two official plugins are available:
+초급 일본어 단어를 반복 학습으로 익히는 웹 애플리케이션입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 주요 기능
 
-## React Compiler
+- 초급 일본어 단어 퀴즈
+- 정답/힌트/오답 여부에 따른 반복 기간 관리
+- 애니메이션 명대사 모드
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 기술 스택
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React 19 + Vite
+- Firebase (Hosting, Cloud Functions)
+- Google Cloud Text-to-Speech (Functions)
